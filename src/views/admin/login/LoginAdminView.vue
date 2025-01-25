@@ -1,5 +1,5 @@
 <script>
-import CustomerLayout from '@/layouts/CustomerLayout.vue';
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue'
@@ -9,7 +9,7 @@ import { useRouter } from 'vue-router'
 
 export default {
     components: {
-        CustomerLayout,
+        AdminLayout,
         CardComponent
     },
     setup() {
@@ -19,12 +19,11 @@ export default {
         const obj = ref({
             email: "",
             password: "",
-            federation_id: userStore.federation.id
         });
         const response = ref({})
 
         onMounted(async () => {
-            userStore.federationIsEmpty()
+            // userStore.federationIsEmpty()
         })
 
         return {
@@ -41,12 +40,13 @@ export default {
         async login(){
             try {
                 console.log(this.obj)
-                this.response = await this.create('athlete/login', this.obj);    
+                this.response = await this.create('login', this.obj);    
                 console.log(this.response)
                 if(this.response.success){
                     this.userStore.isOnline = true
                     this.userStore.user = this.response.data.user
-                    this.router.push({ name: ""})
+                    this.userStore.token = this.response.data.token
+                    this.router.push({ name: "homeAdmin"})
                 }
             } catch (err) {
                 console.error('Error: ', err.message);
@@ -119,11 +119,11 @@ export default {
                                             value="Sign In"
                                             :disabled="!obj.email && !obj.password">
                                     </div>
-                                    <div class="mt-6 text-center">
+                                    <!-- <div class="mt-6 text-center">
                                         <p class="font-medium">Eres Atleta?
                                             <a href="/signup" class="text-primary">Sign up</a>
                                         </p>
-                                    </div>
+                                    </div> -->
                                 </form>
                             </div>
                         </div>

@@ -1,175 +1,112 @@
 import { ref } from 'vue';
 import axios from 'axios';
+import { useUserStore } from '@/stores/user';
+import { getActivePinia } from 'pinia';
 
 export default function useData() {
-    let baseUrl: string = `http://localhost:8000/api/`
-    // const data = ref([]);
-    // const object = ref<any>({});
+    const baseUrl = `http://localhost:8000/api/`;
+    const userStore = getActivePinia() ? useUserStore() : null;
     const isLoading = ref(false);
     const error = ref<string | null>(null);
 
-    // Leer (GET)
-    const fetchAll = async (collection: string, options: object = {}) => {
+    // Configurar instancia de Axios
+    const instance = axios.create({ baseURL: baseUrl });
+
+    // Interceptor para agregar el token
+    instance.interceptors.request.use(
+        (config) => {
+            const token = userStore?.token || null;
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
+
+    // Función para manejar errores
+    const handleError = (err) => {
+        if (err.response) {
+            switch (err.response.status) {
+                case 400:
+                    return 'Solicitud incorrecta.';
+                case 401:
+                    return 'No autorizado.';
+                case 500:
+                    return 'Error del servidor.';
+                default:
+                    return 'Ocurrió un error.';
+            }
+        } else {
+            return err.message || 'Error desconocido.';
+        }
+    };
+
+    // Métodos CRUD
+    const fetchAll = async (collection: string, options: any = {}) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`${baseUrl}${collection}`);
-            // data.value = response.data;
+            const response = await instance.get(collection, { ...options });
             return { success: true, data: response.data };
-        } catch (err: any) {
-            if (err.response) {
-                // Manejo específico según el código de estado
-                switch (err.response.status) {
-                    case 400:
-                        error.value = 'Solicitud incorrecta.';
-                        break;
-                    case 401:
-                        error.value = 'No autorizado.';
-                        break;
-                    case 500:
-                        error.value = 'Error del servidor.';
-                        break;
-                    default:
-                        error.value = 'Ocurrió un error.';
-                }
-            } else {
-                error.value = err.message || 'Error desconocido.';
-            }
+        } catch (err) {
+            error.value = handleError(err);
             return { success: false, error: error.value };
         } finally {
             isLoading.value = false;
         }
     };
 
-    // Encontrar (GET por ID)
-    const find = async (collection: string, id: string,  options: object = {}) => {
+    const find = async (collection: string, id: string, options: any = {}) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.get(`${baseUrl}${collection}/${id}`);
-            // object.value = response.data;
+            const response = await instance.get(`${collection}/${id}`, { ...options });
             return { success: true, data: response.data };
-        } catch (err: any) {
-            if (err.response) {
-                // Manejo específico según el código de estado
-                switch (err.response.status) {
-                    case 400:
-                        error.value = 'Solicitud incorrecta.';
-                        break;
-                    case 401:
-                        error.value = 'No autorizado.';
-                        break;
-                    case 500:
-                        error.value = 'Error del servidor.';
-                        break;
-                    default:
-                        error.value = 'Ocurrió un error.';
-                }
-            } else {
-                error.value = err.message || 'Error desconocido.';
-            }
+        } catch (err) {
+            error.value = handleError(err);
             return { success: false, error: error.value };
         } finally {
             isLoading.value = false;
         }
     };
 
-    // Crear (POST)
-    const create = async (collection: string, newItem: any,  options: object = {}) => {
+    const create = async (collection: string, newItem: any, options: any = {}) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.post(`${baseUrl}${collection}`, newItem);
-            // data.value.push(response.data);
+            const response = await instance.post(collection, newItem, { ...options });
             return { success: true, data: response.data };
-        } catch (err: any) {
-            if (err.response) {
-                // Manejo específico según el código de estado
-                switch (err.response.status) {
-                    case 400:
-                        error.value = 'Solicitud incorrecta.';
-                        break;
-                    case 401:
-                        error.value = 'No autorizado.';
-                        break;
-                    case 500:
-                        error.value = 'Error del servidor.';
-                        break;
-                    default:
-                        error.value = 'Ocurrió un error.';
-                }
-            } else {
-                error.value = err.message || 'Error desconocido.';
-            }
+        } catch (err) {
+            error.value = handleError(err);
             return { success: false, error: error.value };
         } finally {
             isLoading.value = false;
         }
     };
 
-    // Actualizar (PUT o PATCH)
-    const update = async (collection: string, id: string, updatedItem: any,  options: object = {}) => {
+    const update = async (collection: string, id: string, updatedItem: any, options: any = {}) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.patch(`${baseUrl}${collection}/${id}`, updatedItem);
-            // const index = data.value.findIndex((item: any) => item.id === id);
-            // if (index !== -1) {
-            //     data.value[index] = response.data;
-            // }
+            const response = await instance.put(`${collection}/${id}`, updatedItem, { ...options });
             return { success: true, data: response.data };
-        } catch (err: any) {
-            if (err.response) {
-                // Manejo específico según el código de estado
-                switch (err.response.status) {
-                    case 400:
-                        error.value = 'Solicitud incorrecta.';
-                        break;
-                    case 401:
-                        error.value = 'No autorizado.';
-                        break;
-                    case 500:
-                        error.value = 'Error del servidor.';
-                        break;
-                    default:
-                        error.value = 'Ocurrió un error.';
-                }
-            } else {
-                error.value = err.message || 'Error desconocido.';
-            }
+        } catch (err) {
+            error.value = handleError(err);
             return { success: false, error: error.value };
         } finally {
             isLoading.value = false;
         }
     };
 
-    // Eliminar (DELETE)
-    const destroy = async (collection: string, id: string,  options: object = {}) => {
+    const destroy = async (collection: string, id: string, options: any = {}) => {
         isLoading.value = true;
         error.value = null;
         try {
-            const response = await axios.delete(`${baseUrl}${collection}/${id}`);
-            // data.value = data.value.filter((item: any) => item.id !== id);
+            const response = await instance.delete(`${collection}/${id}`, { ...options });
             return { success: true, data: response.data };
-        } catch (err: any) {
-            if (err.response) {
-                // Manejo específico según el código de estado
-                switch (err.response.status) {
-                    case 400:
-                        error.value = 'Solicitud incorrecta.';
-                        break;
-                    case 401:
-                        error.value = 'No autorizado.';
-                        break;
-                    case 500:
-                        error.value = 'Error del servidor.';
-                        break;
-                    default:
-                        error.value = 'Ocurrió un error.';
-                }
-            } else {
-                error.value = err.message || 'Error desconocido.';
-            }
+        } catch (err) {
+            error.value = handleError(err);
             return { success: false, error: error.value };
         } finally {
             isLoading.value = false;
@@ -177,14 +114,12 @@ export default function useData() {
     };
 
     return {
-        // data,
-        // object,
         isLoading,
         error,
         fetchAll,
+        find,
         create,
         update,
         destroy,
-        find,
     };
 }

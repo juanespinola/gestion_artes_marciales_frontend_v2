@@ -9,6 +9,8 @@ export const useUserStore = defineStore('user', () => {
   const isOnline = useStorage('isOnline', ref(false))
   const user = useStorage('user', ref({}))
   const federation = useStorage('federation', ref({}))
+  const token = useStorage('token', ref(''))
+
   const { fetchAll } = useData()
 
 
@@ -23,15 +25,17 @@ export const useUserStore = defineStore('user', () => {
       if(response.success){
         isOnline.value = false;
         user.value = {}
+        token.value = ''
       }
     } else {
       const response = await fetchAll('logout')
       if(response.success){
         isOnline.value = false;
         user.value = {}
+        token.value = ''
       }
     }
   }
   
-  return { isOnline, federation, user, federationIsEmpty, logout}
+  return { isOnline, federation, user, token, federationIsEmpty, logout}
 })
