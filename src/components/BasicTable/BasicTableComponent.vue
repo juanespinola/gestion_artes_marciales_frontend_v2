@@ -14,7 +14,13 @@ export default {
         deleteData: { type: Function, required: true},
     },
     setup(){
-     
+        const setStatusText = (status) => {
+            return status ? 'Activo':'No Activo'
+        }
+        
+        return {
+            setStatusText
+        };
     },
 }
 </script>
@@ -40,7 +46,21 @@ export default {
                 </template>
             </Column>
             <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 60%">
+                <template #body="slotProps">
+                <div v-if="col.field == 'status'">
+                    <!-- Renderizar algo diferente si el campo es 'status' -->
+                    <span>
+                        {{ setStatusText(slotProps.data.status) }}
+                    </span>
+                </div>
+                <div v-else>
+                    <!-- Renderizar el valor normal para otras columnas -->
+                    {{ slotProps.data[col.field] }}
+                </div>
+                </template>
             </Column>
+            
+            
             <Column header="Acciones" headerStyle="width: 5rem; text-align: center"
                 bodyStyle="text-align: center; overflow: visible">
                 <template #body="slotProps">

@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
+import CardComponent from '@/components/Card/CardComponent.vue';
 import SelectComponent from '@/components/Select/SelectComponent.vue';
 
 
@@ -21,7 +22,7 @@ export default {
     },
     setup(props) {
         const { find, update, create } = useData();
-        const collection = 'federation';
+        const collection = 'association';
         const obj = ref({
             description: '',
             status: '',
