@@ -13,6 +13,9 @@ import RoutePermissions from '@/views/admin/permissions/routes'
 import RouteRoles from '@/views/admin/roles/routes'
 import RouteFederations from '@/views/admin/federations/routes'
 import RouteAssociations from '@/views/admin/associations/routes'
+import RouteCountries from '@/views/admin/countries/routes'
+import RouteCities from '@/views/admin/cities/routes'
+import RouteNews from '@/views/admin/news/routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +42,9 @@ const router = createRouter({
         ...RouteRoles,
         ...RouteFederations,
         ...RouteAssociations,
+        ...RouteCountries,
+        ...RouteCities,
+        ...RouteNews
       ]
     }
     // {
