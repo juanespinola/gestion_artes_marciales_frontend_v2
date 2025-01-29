@@ -17,6 +17,10 @@ export default {
         },
         selectedOption: {
             required: false
+        },
+        isDisabled: {
+            type: String,
+            required: false
         }
     },
     emits: ["obj-selected"],
@@ -31,10 +35,10 @@ export default {
             { immediate: true } // Ejecutar en la primera renderización
         );
 
-        onMounted(()=> {
-            
+        onMounted(() => {
+
         })
-        
+
 
         const selectProduct = (event) => {
             const selectedId = event.target.value;
@@ -55,7 +59,7 @@ export default {
 <template>
     <div>
         <label class="mb-3 block text-sm font-medium text-black dark:text-white">
-            {{ title }}
+            {{ title }} {{ this.isDisabled }}
         </label>
         <div class="relative z-20 bg-white dark:bg-form-input">
             <span class="absolute top-1/2 left-4 z-30 -translate-y-1/2">
@@ -76,11 +80,12 @@ export default {
             <select v-model="selectedOption" :class="{
                 'text-black dark:text-white': selectedOption,
                 'text-gray-500': !selectedOption,
+                'disabled:cursor-default disabled:bg-whiter dark:focus:border-primary dark:disabled:bg-black opacity-50': this.isDisabled
             }" class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                @change="selectProduct">
+                @change="selectProduct" :disabled="this.isDisabled">
                 <option value="" disabled>Select Option</option>
                 <option v-for="row in data" :key="row.id" :value="row.id" class="text-body dark:text-bodydark"
-                    v-if="data.length > 0">{{ row.name }}</option>
+                    v-if="data.length > 0">{{ row.name ? row.name : row.color ? row.color : row.description }}</option>
             </select>
             <span class="absolute top-1/2 right-4 z-10 -translate-y-1/2">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

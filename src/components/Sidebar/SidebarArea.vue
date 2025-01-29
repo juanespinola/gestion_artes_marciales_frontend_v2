@@ -79,6 +79,7 @@ const menuGroups = ref([
         label: 'Gestion de Eventos',
         route: '#',
         children: [
+          { label: 'Eventos', route: '/admin/events' },
           { label: 'Tipos de Eventos', route: '/admin/eventtypes' },
           { label: 'Estado de Eventos', route: '/admin/eventstatus' },
         ]
@@ -182,8 +183,8 @@ const menuGroups = ref([
                     fill=""
                   />
                 </svg>`,
-        label: 'Ciudades',
-        route: '/admin/cities'
+        label: 'Atletas',
+        route: '/admin/athletes'
       },
     ]
   }

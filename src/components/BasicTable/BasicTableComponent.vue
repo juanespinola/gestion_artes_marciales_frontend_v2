@@ -9,15 +9,25 @@ export default {
     props: {
         data: [],
         columns: [],
-        newData: { type: Function, required: true},
-        editData: { type: Function, required: true},
-        deleteData: { type: Function, required: true},
+        newData: { type: Function, required: true },
+        editData: { type: Function, required: true },
+        deleteData: { type: Function, required: true },
     },
-    setup(){
+    setup() {
+        const capitalizeFirstLetter = (word) => {
+            if (!word) return ''; // Maneja casos donde la palabra sea null, undefined o vacía
+            return word.charAt(0).toUpperCase() + word.slice(1);
+        };
+
         const setStatusText = (status) => {
-            return status ? 'Activo':'No Activo'
-        }
-        
+            if (typeof status === 'boolean') {
+                return status ? 'Activo' : 'Inactivo';
+            }
+
+            // Si no es booleano, devuelve el texto tal cual
+            return capitalizeFirstLetter(status) || 'Estado desconocido';
+        };
+
         return {
             setStatusText
         };
@@ -47,27 +57,25 @@ export default {
             </Column>
             <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 60%">
                 <template #body="slotProps">
-                <div v-if="col.field == 'status'">
-                    <!-- Renderizar algo diferente si el campo es 'status' -->
-                    <span>
-                        {{ setStatusText(slotProps.data.status) }}
-                    </span>
-                </div>
-                <div v-else>
-                    <!-- Renderizar el valor normal para otras columnas -->
-                    {{ slotProps.data[col.field] }}
-                </div>
+                    <div v-if="col.field == 'status'">
+                        <!-- Renderizar algo diferente si el campo es 'status' -->
+                        <span>
+                            {{ setStatusText(slotProps.data.status) }}
+                        </span>
+                    </div>
+                    <div v-else>
+                        <!-- Renderizar el valor normal para otras columnas -->
+                        {{ slotProps.data[col.field] }}
+                    </div>
                 </template>
             </Column>
-            
-            
+
+
             <Column header="Acciones" headerStyle="width: 5rem; text-align: center"
                 bodyStyle="text-align: center; overflow: visible">
                 <template #body="slotProps">
-                    <GroupActionButtonsComponent 
-                        @editData="editData(slotProps.data.id)" 
-                        @deleteData="deleteData(slotProps.data.id)"
-                    />
+                    <GroupActionButtonsComponent @editData="editData(slotProps.data.id)"
+                        @deleteData="deleteData(slotProps.data.id)" />
                 </template>
             </Column>
 

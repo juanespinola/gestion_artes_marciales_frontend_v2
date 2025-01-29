@@ -18,7 +18,7 @@ export default {
     },
     setup(props) {
         const { find, update, create } = useData();
-        const collection = 'new';
+        const collection = 'eventcontent';
         const obj = ref({
             title: '',
             content: '',
