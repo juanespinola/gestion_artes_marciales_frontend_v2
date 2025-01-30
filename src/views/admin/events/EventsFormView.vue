@@ -4,6 +4,7 @@ import { ref, computed } from "vue";
 import FormEventsComponent from './components/FormEventsComponent.vue';
 import ContentFormEventsComponent from './components/ContentFormEventsComponent.vue';
 import ListEntryCategoryComponent from '../entrycategories/components/ListEntryCategoryComponent.vue';
+import ListAthleteInscriptionsComponent from '../athletesinscriptions/components/ListAthleteInscriptionsComponent.vue';
 
 export default {
     components: {
@@ -18,9 +19,10 @@ export default {
     setup(props) {
         // Lista de pestañas con sus nombres y componentes asociados
         const tabs = ref([
+            { name: "athleteinscriptions", label: "Atletas Inscriptos", component: ListAthleteInscriptionsComponent },
             { name: "evento", label: "Evento", component: FormEventsComponent },
             { name: "content", label: "Contenido", component: ContentFormEventsComponent },
-            { name: "groupcategory", label: "Categorias", component: ListEntryCategoryComponent },
+            { name: "entrycategory", label: "Categorias", component: ListEntryCategoryComponent },
         ]);
 
         // Pestaña seleccionada actualmente
@@ -37,7 +39,7 @@ export default {
         });
 
         const filteredTabs = computed(() => {
-            return tabs.value.filter(tab => tab.name !== "groupcategory" || props.id);
+            return tabs.value.filter(tab => tab.name !== "entrycategory" || props.id);
         });
 
 
