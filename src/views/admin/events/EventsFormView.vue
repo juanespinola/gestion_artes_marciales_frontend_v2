@@ -19,10 +19,10 @@ export default {
     setup(props) {
         // Lista de pestañas con sus nombres y componentes asociados
         const tabs = ref([
-            { name: "athleteinscriptions", label: "Atletas Inscriptos", component: ListAthleteInscriptionsComponent },
             { name: "evento", label: "Evento", component: FormEventsComponent },
             { name: "content", label: "Contenido", component: ContentFormEventsComponent },
             { name: "entrycategory", label: "Categorias", component: ListEntryCategoryComponent },
+            { name: "athleteinscriptions", label: "Atletas Inscriptos", component: ListAthleteInscriptionsComponent },
         ]);
 
         // Pestaña seleccionada actualmente

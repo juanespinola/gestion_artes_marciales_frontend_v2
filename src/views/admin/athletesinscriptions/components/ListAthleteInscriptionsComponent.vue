@@ -6,13 +6,16 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
 import ModalWeightFormComponent from './ModalWeightFormComponent.vue';
+import GenerateMatchBracketsModalFormComponent from './GenerateMatchBracketsModalFormComponent.vue';
+
 
 export default {
     components: {
         DataTable,
         Column,
         GroupActionButtonsComponent,
-        ModalWeightFormComponent
+        ModalWeightFormComponent,
+        GenerateMatchBracketsModalFormComponent
     },
     props: {
         eventid: {
@@ -31,7 +34,11 @@ export default {
         const expandedRows = ref({});
 
         const isModalOpen = ref(false)
+        const isGenerateMatchBracketModalOpen = ref(false)
+
         const modalData = ref({})
+        const modalGenerateMatchBracketsData = ref({})
+
 
         const fetchData = async (eventid) => {
             // const response = await fetchAll(`${collection}/event/${eventid}`);
@@ -75,7 +82,6 @@ export default {
         };
 
         const changeWeightData = (data) => {
-            console.log(data)
             openModal(data)
         }
         const openModal = (data) => {
@@ -84,6 +90,34 @@ export default {
         }
         const closeModal = () => {
             isModalOpen.value = false;
+            fetchData(props.eventid)
+        }
+
+        const generateMatchBrackets = (data) => {
+            openGenerateMatchBracketModal(data)
+        }
+
+        const openGenerateMatchBracketModal = (data) => {
+            modalGenerateMatchBracketsData.value = data
+            isGenerateMatchBracketModalOpen.value = true;
+        }
+        const closeGenerateMatchBracketModal = () => {
+            isGenerateMatchBracketModalOpen.value = false;
+            fetchData(props.eventid)
+        }
+
+        const textWeightField = (data) => {
+            if (!data.data.event_weight && !data.data.valid_weight) {
+                return "Sin peso";
+            }
+
+            if (data.data.event_weight && data.data.valid_weight) {
+                return `${data.data.event_weight} Kg`
+            }
+
+            if (data.data.event_weight && !data.data.valid_weight) {
+                return "Fuera de Peso"
+            }
         }
 
         onMounted(() => {
@@ -111,93 +145,103 @@ export default {
             openModal,
             closeModal,
             isModalOpen,
-            modalData
+            modalData,
+            textWeightField,
+
+            modalGenerateMatchBracketsData,
+            openGenerateMatchBracketModal,
+            closeGenerateMatchBracketModal,
+            isGenerateMatchBracketModalOpen,
+            generateMatchBrackets,
         };
     },
 }
 </script>
 
 <template>
-    <DataTable :value="data" tableStyle="min-width: 50rem" dataKey="id" v-model:expandedRows="expandedRows">
+    <div>
+        <DataTable :value="data" tableStyle="min-width: 50rem" dataKey="id" v-model:expandedRows="expandedRows">
 
-        <Column expander style="width: 1rem" />
-        <Column header="Division" headerStyle="width:20rem">
-            <template #body="{ data }">
-                {{ data.minor_category ? "Menores" : "Mayores" }}
-            </template>
-        </Column>
-        <Column header="Genero" headerStyle="width:20rem">
-            <template #body="{ data }">
-                {{ data.gender }}
-            </template>
-        </Column>
-        <Column header="Categoria" headerStyle="width:20rem">
-            <template #body="{ data }">
-                {{ data.name }}
-            </template>
-        </Column>
-        <Column header="Cinturón" headerStyle="width:20rem">
-            <template #body="{ data }">
-                {{ data.belt.color }}
-            </template>
-        </Column>
-
-
-        <template #expansion="{ data, index }">
-            <DataTable :value="data.tariff_inscription.inscriptions" dataKey="id" rowGroupMode="subheader">
-                <Column header="#" headerStyle="width:3rem">
-                    <template #body="slotProps">
-                        {{ slotProps.index + 1 }}
-                    </template>
-                </Column>
-                <Column field="athlete.name" header="Atleta"></Column>
-                <Column field="athlete.birthdate" header="Edad"></Column>
-                <Column field="athlete" header="Equipo / Academia">
-                    <template #body="slotProps">
-                        {{ slotProps.academy_id ? slotProps.academy_id : "Sin Academia" }}
-                    </template>
-                </Column>
-                <Column header="Peso en Torneo">
-                    <template #body="slotProps">
-                        {{ slotProps.event_weight ? slotProps.event_weight : 'Sin Peso' }}
-                    </template>
-                </Column>
-
-                <Column header="Acciones" headerStyle="text-align: center"
-                    bodyStyle="text-align: center; overflow: visible">
-                    <template #body="{data}">
-                        <GroupActionButtonsComponent 
-                            @changeWeightData="changeWeightData(data)"
-                            :isPayment="true" 
-                            :weightValid="true" />
-
-                        <ModalWeightFormComponent 
-                            :isOpen="isModalOpen" 
-                            :title="'Cargar Peso'" 
-                            :data="modalData"
-                            @close="closeModal" 
-                        />
-                    </template>
-                </Column>
-
-                <template #groupfooter="slotProps">
-                    <div class="flex justify-start w-full">
-                        <div class="flex justify-between w-full ">
-                            <div class="flex items-center">
-                                <span class="font-bold mr-2">Total Inscriptos:</span>
-                                <span>{{ data.tariff_inscription.inscriptions.length }} Atleta/s</span>
-                            </div>
-                            <button
-                                class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">
-                                Generar Llaves
-                            </button>
-                        </div>
-                    </div>
+            <Column expander style="width: 1rem" />
+            <Column header="Division" headerStyle="width:20rem">
+                <template #body="{ data }">
+                    {{ data.minor_category ? "Menores" : "Mayores" }}
                 </template>
+            </Column>
+            <Column header="Genero" headerStyle="width:20rem">
+                <template #body="{ data }">
+                    {{ data.gender }}
+                </template>
+            </Column>
+            <Column header="Categoria" headerStyle="width:20rem">
+                <template #body="{ data }">
+                    {{ data.name }}
+                </template>
+            </Column>
+            <Column header="Cinturón" headerStyle="width:20rem">
+                <template #body="{ data }">
+                    {{ data.belt.color }}
+                </template>
+            </Column>
 
-            </DataTable>
-        </template>
 
-    </DataTable>
+            <template #expansion="{ data, index }">
+                <DataTable :value="data.tariff_inscription.inscriptions" dataKey="id" rowGroupMode="subheader">
+                    <Column header="#" headerStyle="width:3rem">
+                        <template #body="slotProps">
+                            {{ slotProps.index + 1 }}
+                        </template>
+                    </Column>
+                    <Column field="athlete.name" header="Atleta"></Column>
+                    <Column field="athlete.birthdate" header="Edad"></Column>
+                    <Column field="athlete" header="Equipo / Academia">
+                        <template #body="slotProps">
+                            {{ slotProps.academy_id ? slotProps.academy_id : "Sin Academia" }}
+                        </template>
+                    </Column>
+                    <Column header="Peso en Torneo">
+                        <template #body="slotProps">
+                            {{ textWeightField(slotProps) }}
+                        </template>
+                    </Column>
 
+                    <Column header="Acciones" headerStyle="text-align: center"
+                        bodyStyle="text-align: center; overflow: visible">
+                        <template #body="{ data }">
+                            <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="true"
+                                :weightValid="data.valid_weight" />
+                        </template>
+                    </Column>
+
+                    <template #groupfooter="slotProps">
+                        <div class="flex justify-start w-full">
+                            <div class="flex justify-between w-full ">
+                                <div class="flex items-center">
+                                    <span class="font-bold mr-2">Total Inscriptos:</span>
+                                    <span>{{ data.tariff_inscription.inscriptions.length }} Atleta/s</span>
+                                </div>
+                                <button @click="generateMatchBrackets(data)"
+                                    class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">
+                                    Generar Llaves
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </DataTable>
+            </template>
+        </DataTable>
+
+
+        <ModalWeightFormComponent 
+            :isOpen="isModalOpen" 
+            :title="'Cargar Peso'" 
+            :data="modalData"
+            @close="closeModal" />
+
+        <GenerateMatchBracketsModalFormComponent 
+            :isOpen="isGenerateMatchBracketModalOpen"
+            :title="'Generar Llaves de Combate'" 
+            :data="modalGenerateMatchBracketsData"
+            @close="closeGenerateMatchBracketModal" />
+    </div>
 </template>

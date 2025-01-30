@@ -19,6 +19,9 @@ export default {
         }
         
     },
+    setup(props){
+
+    },
     methods: {
         handleEditData() {
             // console.log(item)
@@ -92,8 +95,11 @@ export default {
             </div>
         </button>
     
-        <button @click="handleWeight">
-            <div class="icon-container bg-red-600 p-2 rounded-full">
+        <button @click="handleWeight" :disabled="$props.weightValid">
+            <div class="icon-container p-2 rounded-full" :class="{
+                    'bg-meta-3 opacity-100': $props.weightValid,
+                    'bg-red-600': !$props.weightValid
+                }">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path
