@@ -5,6 +5,7 @@ import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue'
 import useData from '@/composables/useData'
 import { useRouter } from 'vue-router'
+import useNotification from '@/composables/useNotification';
 
 
 export default {
@@ -16,44 +17,66 @@ export default {
         const userStore = useUserStore()
         const router = useRouter()
         const { create, isLoading, error } = useData();
+        const { notification } = useNotification();
         const obj = ref({
             email: "",
             password: "",
         });
-        const response = ref({})
+        // const response = ref({})
+
+
+        const login = async () =>{
+            try {
+                const response = await create('login', obj.value);    
+                if(response.success){
+                    userStore.isOnline = true
+                    userStore.user = response.data.user
+                    userStore.token = response.data.token
+                    router.push({ name: "homeAdmin"})
+                }
+            } catch (err) {
+                console.error('Error: ', err.message);
+            }
+
+        }
 
         onMounted(async () => {
             // userStore.federationIsEmpty()
+            // notification()
         })
 
         return {
             userStore,
             router,
             obj,
-            response,
             create,
-            isLoading, 
-            error
+            isLoading,
+            error,
+            login
         }
     },
-    methods: {
-        async login(){
-            try {
-                console.log(this.obj)
-                this.response = await this.create('login', this.obj);    
-                console.log(this.response)
-                if(this.response.success){
-                    this.userStore.isOnline = true
-                    this.userStore.user = this.response.data.user
-                    this.userStore.token = this.response.data.token
-                    this.router.push({ name: "homeAdmin"})
-                }
-            } catch (err) {
-                console.error('Error: ', err.message);
-            }
-            
-        }
-    }
+    // methods: {
+    //     async login(){
+    //         try {
+
+    //             if(this.error){
+    //                 this.notification
+    //             }
+
+    //             // this.response = await this.create('login', this.obj);    
+    //             // if(this.response.success){
+    //             //     this.userStore.isOnline = true
+    //             //     this.userStore.user = this.response.data.user
+    //             //     this.userStore.token = this.response.data.token
+    //             //     this.router.push({ name: "homeAdmin"})
+    //             // }
+
+    //         } catch (err) {
+    //             console.error('Error: ', err.message);
+    //         }
+
+    //     }
+    // }
 }
 </script>
 
@@ -72,12 +95,12 @@ export default {
                                 <h2 class="text-2xl font-bold text-black dark:text-white sm:text-title-xl2 mb-2">Inicia
                                     Sesión</h2>
                                 <span class="mb-9 block font-medium">{{ userStore.federation.description }}</span>
-                                <form @submit.prevent="login">
+                                <form @submit.prevent="login()">
                                     <div class="mb-4">
-                                        <label
-                                            class="mb-2.5 block font-medium text-black dark:text-white">Email</label>
+                                        <label class="mb-2.5 block font-medium text-black dark:text-white">Email</label>
                                         <div class="relative">
-                                            <input type="email" placeholder="" name="email" id="email" v-model="obj.email"
+                                            <input type="email" placeholder="" name="email" id="email"
+                                                v-model="obj.email"
                                                 class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-black dark:text-white">
                                             <span class="absolute right-4 top-4">
                                                 <svg class="fill-current" width="22" height="22" viewBox="0 0 22 22"
@@ -115,9 +138,8 @@ export default {
                                     <div class="mb-5 mt-6">
                                         <input type="submit"
                                             class="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
-                                            :class="{'opacity-25 cursor-not-allowed': !obj.email && !obj.password}"
-                                            value="Sign In"
-                                            :disabled="!obj.email && !obj.password">
+                                            :class="{ 'opacity-25 cursor-not-allowed': !obj.email && !obj.password }"
+                                            value="Sign In" :disabled="!obj.email && !obj.password">
                                     </div>
                                     <!-- <div class="mt-6 text-center">
                                         <p class="font-medium">Eres Atleta?

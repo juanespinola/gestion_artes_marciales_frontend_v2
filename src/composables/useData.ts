@@ -2,12 +2,14 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
 import { getActivePinia } from 'pinia';
+import useNotification from './useNotification';
 
 export default function useData() {
     const baseUrl = `http://localhost:8000/api/`;
     const userStore = getActivePinia() ? useUserStore() : null;
     const isLoading = ref(false);
     const error = ref<string | null>(null);
+    const { notification } = useNotification()
 
     // Configurar instancia de Axios
     const instance = axios.create({ baseURL: baseUrl });

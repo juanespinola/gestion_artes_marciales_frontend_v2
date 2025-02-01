@@ -7,7 +7,7 @@ import Column from 'primevue/column';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
 import ModalWeightFormComponent from './ModalWeightFormComponent.vue';
 import GenerateMatchBracketsModalFormComponent from './GenerateMatchBracketsModalFormComponent.vue';
-
+import useNotification from '@/composables/useNotification';
 
 export default {
     components: {
@@ -31,6 +31,7 @@ export default {
         const columns = [];
         const data = ref([]);
         const { isLoading, error, create, destroy } = useData();
+        const { notification } = useNotification()
         const expandedRows = ref({});
 
         const isModalOpen = ref(false)
@@ -106,6 +107,12 @@ export default {
             fetchData(props.eventid)
         }
 
+
+        const detailsMatchBrackets = (data) => {
+            console.log(data)
+            router.push({ name: "ListMatchbracket", params: { eventid: props.eventid, entrycategoryid: data.id }})
+        }
+
         const textWeightField = (data) => {
             if (!data.data.event_weight && !data.data.valid_weight) {
                 return "Sin peso";
@@ -153,6 +160,8 @@ export default {
             closeGenerateMatchBracketModal,
             isGenerateMatchBracketModalOpen,
             generateMatchBrackets,
+
+            detailsMatchBrackets
         };
     },
 }
@@ -220,9 +229,13 @@ export default {
                                     <span class="font-bold mr-2">Total Inscriptos:</span>
                                     <span>{{ data.tariff_inscription.inscriptions.length }} Atleta/s</span>
                                 </div>
-                                <button @click="generateMatchBrackets(data)"
+                                <button v-if="data.match_bracket.length == 0" @click="generateMatchBrackets(data)"
                                     class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">
                                     Generar Llaves
+                                </button>
+                                <button v-if="data.match_bracket.length > 0" @click="detailsMatchBrackets(data)"
+                                    class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">
+                                    Ver Llaves
                                 </button>
                             </div>
                         </div>
