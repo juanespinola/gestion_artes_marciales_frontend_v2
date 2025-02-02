@@ -109,7 +109,6 @@ export default {
 
 
         const detailsMatchBrackets = (data) => {
-            console.log(data)
             router.push({ name: "ListMatchbracket", params: { eventid: props.eventid, entrycategoryid: data.id }})
         }
 
@@ -195,7 +194,7 @@ export default {
 
 
             <template #expansion="{ data, index }">
-                <DataTable :value="data.tariff_inscription.inscriptions" dataKey="id" rowGroupMode="subheader">
+                <DataTable :value="data.tariff_inscription.inscriptions" dataKey="index" rowGroupMode="subheader">
                     <Column header="#" headerStyle="width:3rem">
                         <template #body="slotProps">
                             {{ slotProps.index + 1 }}
@@ -215,10 +214,11 @@ export default {
                     </Column>
 
                     <Column header="Acciones" headerStyle="text-align: center"
-                        bodyStyle="text-align: center; overflow: visible">
+                        bodyStyle="text-align: center; overflow: visible; ">
                         <template #body="{ data }">
-                            <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="true"
-                                :weightValid="data.valid_weight" />
+                                <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="true"
+                                    :weightValid="data.valid_weight"/>
+                            
                         </template>
                     </Column>
 
