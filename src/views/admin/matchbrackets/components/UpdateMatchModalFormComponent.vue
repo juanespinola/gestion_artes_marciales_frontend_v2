@@ -126,7 +126,7 @@ export default {
                     {{ data?.athlete_one?.name }} VS {{ data?.athlete_two?.name }}
                 </h3>
                 <span class="mx-auto mb-6 inline-block h-1 w-22.5 rounded bg-primary"></span>
-                {{ obj }}
+                
                 <div class="mb-4.5 flex flex-col gap-6 xl:flex-row">
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white">Puntaje Atleta Uno

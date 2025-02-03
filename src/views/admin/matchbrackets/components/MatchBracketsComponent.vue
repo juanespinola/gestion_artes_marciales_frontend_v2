@@ -65,7 +65,37 @@ export default {
             obj.value.entry_category_id = props.entrycategoryid
 
             fetchData()
-        })
+        });
+
+        const formatAthleteOne = (data) => {
+
+            if (!data.athlete_one && data.bracket.number_phase > 1) {
+                return "Atleta"
+            }
+
+            if (!data.athlete_one && !data.athlete_two) {
+                return "Atleta"
+            }
+
+            return data.athlete_one.name
+        }
+
+        const formatAthleteTwo = (data) => {
+
+            if (!data.athlete_two && data.bracket.number_phase > 1) {
+                return "Atleta"
+            }
+
+            if (!data.athlete_one && !data.athlete_two) {
+                return "Atleta"
+            }
+
+            if (data.athlete_one && !data.athlete_two) {
+                return 'Bye'
+            }
+
+            return data.athlete_two.name
+        }
 
         return {
             data,
@@ -74,7 +104,9 @@ export default {
             openMatchModal,
             closeMatchModal,
             modalMatchData,
-            isModalMatchOpen
+            isModalMatchOpen,
+            formatAthleteOne,
+            formatAthleteTwo,
         }
 
     }
@@ -90,7 +122,7 @@ export default {
                 class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white bg-meta-3"
                 @click="router.go(-1)">Inscriptos</button>
         </div>
-        <div class="flex mr-3 ">
+        <div class="flex mr-30">
             <ol class="flex flex-1 flex-col justify-around mr-5 matchbracket h-auto"
                 v-for="(matchbracket, index) of data" :class="{ 'ml-5': index > 0 }" :key="index">
                 <div class="border-b border-stroke px-4 py-4 dark:border-strokedark">
@@ -100,48 +132,54 @@ export default {
                     <li v-for="(match, matchIndex) in matchbracket.matches" :key="matchIndex"
                         class="flex flex-col justify-center m-2 p-1 leading-relaxed bg-gray-600 text-gray-300 relative with-connector"
                         :class="{
-                            'with-bye': match.athlete_one && !match.athlete_two && data.length > 2,
+                            'with-bye': match.athlete_one && !match.athlete_two && match.bracket.number_phase == 1,
                             'from-bye': checkFromBye(matchbracket.number_phase, match.athlete_one),
                             'round-winner': matchbracket.number_phase == data.length
                         }">
-                        <!-- TODO: cuando va avanzando desaparecen los registros -->
-                        <!-- TODO: with-bye and from-bye dan errores porque van deformando cuando avanzan las fases -->
+
                         <div @click="openMatchModal(match)" class="relative group inline-block">
 
-                            <!-- Tooltip -->
-                            <div
-                                class="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-900 text-white text-sm px-3 py-2 rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                Combate # {{ match.id }}
+
+                            <div class="relative">
+                                <!-- Contenedor del Tooltip -->
                                 <div
-                                    class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900">
+                                    class="absolute left-full top-1/2 -translate-y-[30%] p-3 max-w-xs min-w-[150px] w-auto bg-gray-300 text-black rounded shadow-md hidden group-hover:flex flex-col space-y-1 z-10">
+                                    <!-- Flecha del Tooltip -->
+                                    <div
+                                        class="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-full w-0 h-0 border-t-8 border-b-8 border-r-8 border-transparent border-r-gray-300">
+                                    </div>
+
+                                    <span class="font-semibold">Combate #{{ match.id }}</span>
+                                    <span><label class="font-semibold">Estado: </label>{{ match.bracket.status }}</span>
+                                    <span>
+                                        <label class="font-semibold">Puntaje:</label> {{ match.score_one_athlete ?? 0 }}
+                                        - {{ match.score_two_athlete ?? 0 }}
+                                    </span>
+                                    <span v-if="match.bracket.status == 'finalizado'">
+                                        <label class="font-semibold">Ganador:</label> {{ match.athlete_id_winner ===
+                                            match.athlete_one.id ?
+                                            match.athlete_one.name : match.athlete_two.name }}
+                                    </span>
+                                    <span class="text-sm text-gray-600">{{ match.bracket.match_time }}</span>
                                 </div>
                             </div>
 
-                            <div v-if="match.athlete_one" class="border-b border-stroke flex items-center py-1">
-                                <span class="w-6 h-6 ml-1 mr-1 inline-block bg-gray-300 rounded-full"></span>
-                                {{ match.athlete_one.name }}
-                            </div>
-                            <div v-if="match.athlete_two" class="flex items-center py-1">
-                                <span class="w-6 h-6 ml-1 mr-1 inline-block bg-gray-300 rounded-full "></span>
-                                {{ match.athlete_two.name }}
-                            </div>
-
-                            <div v-if="!match.athlete_one && matchbracket.number_phase > 1"
-                                class="border-b border-stroke flex items-center py-1">
-                                <span class="w-6 h-6 ml-1 mr-1 inline-block bg-gray-300 rounded-full"></span>
-                                Atleta
+                            <div class="border-b border-stroke flex items-center py-1">
+                                <span class="w-6 h-6 mx-1 inline-block rounded-full bg-gray-300" :class="{
+                                    'dark:bg-meta-3 bg-meta-3': match.athlete_id_winner && match.athlete_id_winner === (match.athlete_one ? match.athlete_one.id : null),
+                                    'dark:bg-meta-1 bg-meta-1': match.athlete_id_loser && match.athlete_id_loser === (match.athlete_one ? match.athlete_one.id : null)
+                                }"></span>
+                                {{ formatAthleteOne(match) }}
                             </div>
 
-                            <div v-if="!match.athlete_two && matchbracket.number_phase > 1"
-                                class="flex items-center py-1">
-                                <span class="w-6 h-6 ml-1 mr-1 inline-block bg-gray-300 rounded-full"></span>
-                                Atleta
+                            <div class="flex items-center py-1">
+                                <span class="w-6 h-6 mx-1 inline-block rounded-full bg-gray-300" :class="{
+                                    'dark:bg-meta-3 bg-meta-3': match.athlete_id_winner && match.athlete_id_winner === (match.athlete_two ? match.athlete_two.id : null),
+                                    'dark:bg-meta-1 bg-meta-1': match.athlete_id_loser && match.athlete_id_loser === (match.athlete_two ? match.athlete_two.id : null)
+                                }"></span>
+                                {{ formatAthleteTwo(match)}}
                             </div>
 
-                            <div v-else-if="match.athlete_one && !match.athlete_two" class="flex items-center py-1">
-                                <span class="w-6 h-6 ml-1 mr-1 inline-block bg-gray-300 rounded-full"></span>
-                                Bye
-                            </div>
                         </div>
                     </li>
                 </div>
@@ -219,5 +257,46 @@ export default {
 
 .with-connector.with-bye+.with-connector {
     display: none;
+}
+
+.bracket-match-dropdown-container {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(50%) translateY(-25%);
+    padding: 10px;
+    z-index: 4;
+}
+
+.bracket-match-dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 / 15 * 1rem);
+    padding: calc(8 / 15 * 1rem) calc(12 / 15 * 1rem);
+    border-radius: calc(4 / 15 * 1rem);
+    background: #cecfd3;
+    color: #000000;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: calc(4 / 15 * 1rem);
+}
+
+.arrow-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: auto;
+    width: calc(10 / 15 * 1rem);
+}
+
+.arrow {
+    height: 50px;
+    width: 100%;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-right: 50px solid #cecfd3;
 }
 </style>
