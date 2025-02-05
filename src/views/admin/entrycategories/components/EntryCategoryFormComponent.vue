@@ -136,7 +136,7 @@ export default {
             <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
         </div>
         <div class="p-7">
-            {{ obj }}
+            
             <form @submit.prevent="saveData">
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full">

@@ -1,5 +1,4 @@
 <script>
-import CustomerLayout from '@/layouts/CustomerLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue'
@@ -9,7 +8,6 @@ import { useRouter } from 'vue-router'
 
 export default {
     components: {
-        CustomerLayout,
         CardComponent
     },
     setup() {
@@ -21,7 +19,21 @@ export default {
             password: "",
             federation_id: userStore.federation.id
         });
-        const response = ref({})
+
+        const login = async () => {
+            try {
+                const response = await create('athlete/login', obj.value);    
+                if(response.success){
+                    userStore.isOnline = true
+                    userStore.user = response.data.user
+                    userStore.token = response.data.token
+                    router.push({ name: "home"})
+                }
+            } catch (err) {
+                console.error('Error: ', err.message);
+            }
+            
+        }
 
         onMounted(async () => {
             userStore.federationIsEmpty()
@@ -31,29 +43,12 @@ export default {
             userStore,
             router,
             obj,
-            response,
+            login,
             create,
             isLoading, 
             error
         }
     },
-    methods: {
-        async login(){
-            try {
-                console.log(this.obj)
-                this.response = await this.create('athlete/login', this.obj);    
-                console.log(this.response)
-                if(this.response.success){
-                    this.userStore.isOnline = true
-                    this.userStore.user = this.response.data.user
-                    this.router.push({ name: ""})
-                }
-            } catch (err) {
-                console.error('Error: ', err.message);
-            }
-            
-        }
-    }
 }
 </script>
 
@@ -72,7 +67,7 @@ export default {
                                 <h2 class="text-2xl font-bold text-black dark:text-white sm:text-title-xl2 mb-2">Inicia
                                     Sesión</h2>
                                 <span class="mb-9 block font-medium">{{ userStore.federation.description }}</span>
-                                <form @submit.prevent="login">
+                                <form @submit.prevent="login()">
                                     <div class="mb-4">
                                         <label
                                             class="mb-2.5 block font-medium text-black dark:text-white">Email</label>

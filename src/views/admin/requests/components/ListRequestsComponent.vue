@@ -1,34 +1,27 @@
 <script>
+import AdminLayout from '@/layouts/AdminLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
-import useData from '@/composables/useData'
-import { useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import useData from '@/composables/useData';
+import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import GroupActionButtonsComponent from '@/components/BasicTable/GroupActionButtonsComponent.vue';
-
-
-
 
 export default {
-    components: { CardComponent, DataTable, Column, GroupActionButtonsComponent },
+    components: { AdminLayout, CardComponent, DataTable, Column },
     setup() {
-        const collection = 'athlete';
-        const newDataRoute = 'NewAthlete';
-        const editDataRoute = 'EditAthlete';
+        const collection = 'requestautorization';
+        const newDataRoute = 'NewRequest';
+        const editDataRoute = 'EditRequest';
         const router = useRouter();
         const columns = [
-            { field: 'name', header: 'Descripción' },
-            { field: 'document', header: 'Nro Documento' },
-            { field: 'academy_id', header: 'Academia' },
-            { field: 'belt.color', header: 'Cinturón' },
-            { field: 'country.description', header: 'Pais' },
-            { field: 'city.description', header: 'Ciudad' },
-
+            { field: 'request_text', header: 'Solicitud' },
+            { field: 'requested_by', header: 'Solicitado por' },
+            { field: 'status', header: 'Estado' },
+            { field: 'date_request', header: 'Fecha de Solicitud' },
         ];
         const data = ref([]);
         const { isLoading, error, fetchAll, destroy } = useData();
-        const expandedRows = ref({});
 
         const fetchData = async () => {
             const response = await fetchAll(collection);
@@ -52,13 +45,10 @@ export default {
             }
         };
 
-        const handleSanctionsData = (id) => {
-            router.push({ name: "ListSanctions", params: { athleteid:id } });
-        }
-
         onMounted(() => {
             fetchData(); // Cargar los datos al montar el componente
         });
+
 
         return {
             data,
@@ -73,8 +63,6 @@ export default {
             newData,
             editData,
             deleteData,
-            expandedRows,
-            handleSanctionsData
         };
     },
 };
@@ -89,8 +77,7 @@ export default {
             v-model:expandedRows="expandedRows">
             <template #header>
                 <div class="flex justify-between">
-                    <button
-                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-black text-white rounded-full">Exportar</button>
+                    <div></div>
                     <button @click="newData"
                         class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button>
                 </div>
@@ -100,12 +87,12 @@ export default {
                     {{ slotProps.index + 1 }}
                 </template>
             </Column>
-            <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 60%">
+            <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 40%">
             </Column>
-            <Column header="Acciones" headerStyle="width: 5rem; text-align: center"
+            <Column header="Acciones" headerStyle="width:3rem; text-align: center"
                 bodyStyle="text-align: center; overflow: visible">
                 <template #body="slotProps">
-                    <button @click="handleSanctionsData(slotProps.data.id)">
+                    <button @click="editData(slotProps.data.id)">
                         <div style="" class="icon-container p-2 rounded-full bg-[#817363]">
                             <svg class="fill-current text-white" width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">

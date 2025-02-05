@@ -10,6 +10,7 @@ const userStore = useUserStore()
 <template>
     <CustomerLayout>
         <FederationsView v-if="Object.keys(userStore.federation).length === 0"/>
+        <router-view />
     </CustomerLayout>
 
     <!-- <AdminLayout v-if="userStore.isOnline && userStore.user.type !== 'athlete'">
