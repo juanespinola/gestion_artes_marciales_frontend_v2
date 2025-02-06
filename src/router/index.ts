@@ -8,7 +8,8 @@ import LoginAdminView from '@/views/admin/login/LoginAdminView.vue'
 import RouteProfile from '@/views/customer/profile/routes'
 
 import RouteAdmin from '@/views/admin/router'
-import FederationsView from '@/views/customer/FederationsView.vue'
+import RoutePaymentFee from '@/views/customer/paymentsfees/routes'
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -21,7 +22,8 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       children: [
-        ...RouteProfile
+        ...RouteProfile,
+        ...RoutePaymentFee,
       ]
     },
     { path: '/admin/login', name: "LoginAdmin", component: LoginAdminView },

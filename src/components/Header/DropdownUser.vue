@@ -83,12 +83,12 @@ const logout = () => {
                 fill=""
               />
             </svg>
-            My Profile
+            Mi Perfil
           </router-link>
         </li>
         <li>
           <router-link
-            to="#"
+            to="paymentsfees"
             class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
           >
             <svg
@@ -104,7 +104,7 @@ const logout = () => {
                 fill=""
               />
             </svg>
-            My Contacts
+            Mis Cuotas y Pagos
           </router-link>
         </li>
         <li>
