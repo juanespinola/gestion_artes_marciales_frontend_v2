@@ -5,10 +5,18 @@ import DropdownMessage from './DropdownMessage.vue'
 import DropdownNotification from './DropdownNotification.vue'
 import DropdownUser from './DropdownUser.vue'
 import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
 
 const { toggleSidebar } = useSidebarStore()
 const sidebarStore = useSidebarStore()
 const userStore = useUserStore()
+const router = useRouter()
+
+
+const handleFederationSelection = () => {
+  userStore.selectFederation()
+  router.push({ name: "home"})
+}
 </script>
 
 <template>
@@ -73,7 +81,10 @@ const userStore = useUserStore()
             <!-- Dark Mode Toggler -->
             <DarkModeSwitcher />
             <!-- Dark Mode Toggler -->
+             
           </li>
+          <button v-if="!userStore.isOnline" @click="handleFederationSelection">Federaciones</button>
+
 
           <!-- Notification Menu Area -->
           <!-- <DropdownNotification /> -->

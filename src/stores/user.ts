@@ -36,6 +36,10 @@ export const useUserStore = defineStore('user', () => {
       }
     }
   }
+
+  const selectFederation = () => {
+    federation.value = {}
+  }
   
-  return { isOnline, federation, user, token, federationIsEmpty, logout}
+  return { isOnline, federation, user, token, federationIsEmpty, logout, selectFederation}
 })

@@ -8,10 +8,12 @@ import LoginAdminView from '@/views/admin/login/LoginAdminView.vue'
 import RouteProfile from '@/views/customer/profile/routes'
 
 import RouteAdmin from '@/views/admin/router'
+import FederationsView from '@/views/customer/FederationsView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
+    // { path: '/federations', name: "FederationsCards", component: FederationsView },
     { path: '/federation', name: "FederationCards", component: FederationView },
     { path: '/login', name: "Login", component: LoginView },
     {

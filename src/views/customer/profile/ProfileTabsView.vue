@@ -1,16 +1,20 @@
 <script>
 import CardComponent from '@/components/Card/CardComponent.vue';
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from 'vue'
 import ProfileFormComponent from './components/ProfileFormComponent.vue';
 import AthleteProfileFormComponents from './components/AthleteProfileFormComponent.vue';
 import MinorAuthorizationFormComponent from './components/MinorAuthorizationFormComponent.vue';
 import { useUserStore } from '@/stores/user';
+import MinorAuthorizationModalComponent from './components/MinorAuthorizationModalComponent.vue';
+import useData from '@/composables/useData';
 // import ListEntryCategoryComponent from '../entrycategories/components/ListEntryCategoryComponent.vue';
 // import ListAthleteInscriptionsComponent from '../athletesinscriptions/components/ListAthleteInscriptionsComponent.vue';
 
+
 export default {
     components: {
-        CardComponent
+        CardComponent,
+        MinorAuthorizationModalComponent
     },
     props: {
         // id: {
@@ -19,7 +23,7 @@ export default {
         // },
     },
     setup(props) {
-
+        const { fetchAll } = useData()
         const userStore = useUserStore()
         // Lista de pestañas con sus nombres y componentes asociados
         const tabs = ref([
@@ -28,6 +32,17 @@ export default {
             { name: "minorauthorization", label: "Autorización de Menores", component: MinorAuthorizationFormComponent },
           
         ]);
+        const isMinorAuthorizationModal = ref(false)
+        const obj = ref({
+            minor_verified: '',
+        });
+
+        const minorVerified = async () => {
+            const response = await fetchAll('athlete/minor_authorization')
+            if(response.success){
+                obj.value.minor_verified = response.data.minor_verified
+            }
+        }
 
         // Pestaña seleccionada actualmente
         const currentTab = ref(tabs.value[0].name);
@@ -45,15 +60,35 @@ export default {
         const filteredTabs = computed(() => {
             return tabs.value.filter(tab => tab.name !== "minorauthorization" || props.minor_verified);
         });
+    
+        onMounted(async () => {
+            await minorVerified()
+            openMinorAuthorizationModal()
+        })
 
+
+        const openMinorAuthorizationModal = () => {
+            if(!obj.value.minor_verified){
+                isMinorAuthorizationModal.value = true
+            }
+        }
+
+        const closeMinorAuthorizationModal = () => {
+            isMinorAuthorizationModal.value = false
+        }   
 
         return {
+            obj,
             tabs,
             currentTab,
             selectTab,
             currentComponent,
             filteredTabs,
             userStore,
+            isMinorAuthorizationModal,
+            openMinorAuthorizationModal,
+            closeMinorAuthorizationModal,
+
         };
     },
 };
@@ -77,6 +112,12 @@ export default {
         <!-- Tab Content -->
         <div>
             <component :is="currentComponent"/>
+            <MinorAuthorizationModalComponent 
+                :isOpen="isMinorAuthorizationModal" 
+                @close="closeMinorAuthorizationModal" 
+                @accept="selectTab('minorauthorization')"
+            />
         </div>
+        
     </div>
 </template>
