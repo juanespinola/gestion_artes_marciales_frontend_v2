@@ -113,18 +113,18 @@ export default {
         };
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
-        onMounted(() => {
+        onMounted(async () => {
+            if (isEditing.value) await fetchProduct();
             fetchLocations()
             fetchEventsTypes()
             fetchEventsStatus()
-            if (isEditing.value) fetchProduct();
         });
 
-        watch(() => props.eventid, (newId) => {
+        watch(() => props.eventid, async (newId) => {
+            if (newId) await fetchProduct();
             fetchLocations()
             fetchEventsTypes()
             fetchEventsStatus()
-            if (newId) fetchProduct();
         });
 
         const handleEventTypeSelected = (itemSelected) => {
@@ -223,8 +223,7 @@ export default {
 
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full ">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Costo de
-                            Inscripcion</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Costo de Evento (0 si es Torneo)</label>
                         <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                             type="number" name="email" id="email" v-model="obj.inscription_fee">
