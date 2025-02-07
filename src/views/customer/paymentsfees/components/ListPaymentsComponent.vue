@@ -11,7 +11,7 @@ import { useUserStore } from '@/stores/user';
 export default {
     components: { AdminLayout, CardComponent, DataTable, Column },
     setup() {
-        const collection = 'athlete/getathletemembershipfee';
+        const collection = 'athlete/getPayments';
         const newDataRoute = 'NewRequest';
         const editDataRoute = 'EditRequest';
         const router = useRouter();
@@ -90,21 +90,15 @@ export default {
                 </template>
             </Column>
 
-            <Column field="description" header="Descripción">
+            <Column header="Motivo de Pago">
                 <template #body="{ data }">
-                    {{ data.description }}
+                    {{ data.membership ? "Pago de Membresia" : "Pago de Inscripción" }}
                 </template>
             </Column>
 
-            <Column field="end_date_fee" header="Fecha Vencimiento">
+            <Column header="Precio">
                 <template #body="{ data }">
-                    {{ data.end_date_fee }}
-                </template>
-            </Column>
-
-            <Column field="amount_fee" header="Precio">
-                <template #body="{ data }">
-                    {{ data.amount_fee }} Gs.
+                    {{ data.membership ? data.membership.amount_fee	: data.inscription.tariff_inscription.price }} Gs.
                 </template>
             </Column>
 

@@ -46,7 +46,6 @@ export default {
                 obj.value.description = response.data.description
                 obj.value.amount_fee = response.data.amount_fee
                 obj.value.total = response.data.amount_fee
-                obj.value.athlete_id = response.data.description
                 obj.value.membership_id = props.membership_id
                 obj.value.total_payment = response.data.amount_fee
                 obj.value.payment_for = 'membresia'
@@ -60,7 +59,6 @@ export default {
                 obj.value.description = response.data.description
                 obj.value.amount_fee = response.data.amount_fee
                 obj.value.total = response.data.amount_fee
-                obj.value.athlete_id = response.data.description
                 obj.value.membership_id = props.membership_id
                 obj.value.total_payment = response.data.tariff_inscription ? response.data.tariff_inscription.price : response.data.inscription_fee 
                 obj.value.payment_for = 'inscription'
@@ -89,7 +87,7 @@ export default {
                 router.push({ 
                         name: "Payment", 
                         params: { id: obj.value.membership_id ? obj.value.membership_id : obj.value.inscription_id },
-                        query: { payment_gateway: obj.value.payment_gateway, response_bancard: response.data  }
+                        query: { payment_gateway: obj.value.payment_gateway, response_bancard: response.data.data.process_id  }
                     })
               }  
             } catch (err) {

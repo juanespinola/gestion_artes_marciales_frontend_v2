@@ -23,5 +23,5 @@ export default {
 </script>
 
 <template>
-
+    aca tenemos que armar el iframe de barcard
 </template>
