@@ -9,6 +9,8 @@ import RouteProfile from '@/views/customer/profile/routes'
 
 import RouteAdmin from '@/views/admin/router'
 import RoutePaymentFee from '@/views/customer/paymentsfees/routes'
+import RouteAthleteNews from '@/views/customer/news/routes'
+import RouteAthleteEvents from '@/views/customer/events/routes'
 
 
 const router = createRouter({
@@ -24,6 +26,8 @@ const router = createRouter({
       children: [
         ...RouteProfile,
         ...RoutePaymentFee,
+        ...RouteAthleteNews,
+        ...RouteAthleteEvents,
       ]
     },
     { path: '/admin/login', name: "LoginAdmin", component: LoginAdminView },

@@ -1,13 +1,11 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
-import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
 
 export default {
-    components: { AdminLayout, CardComponent, BasicTableComponent },
+    components: {  BasicTableComponent },
     setup() {
         const collection = 'country';
         const newDataRoute = 'NewCountry';

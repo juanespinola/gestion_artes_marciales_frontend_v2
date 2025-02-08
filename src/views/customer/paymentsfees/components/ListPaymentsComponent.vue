@@ -96,6 +96,13 @@ export default {
                 </template>
             </Column>
 
+            <Column header="Método de Pago">
+                <template #body="{ data }">
+                    {{ data.payment_gateway }}
+                </template>
+            </Column>
+
+
             <Column header="Precio">
                 <template #body="{ data }">
                     {{ data.membership ? data.membership.amount_fee	: data.inscription.tariff_inscription.price }} Gs.
@@ -108,7 +115,7 @@ export default {
                 </template>
             </Column>
 
-            <Column header="Acciones" headerStyle="width:3rem; text-align: center"
+            <!-- <Column header="Acciones" headerStyle="width:3rem; text-align: center"
                 bodyStyle="text-align: center; overflow: visible">
                 <template #body="slotProps">
                     <button @click="editData(slotProps.data.id)"
@@ -124,7 +131,7 @@ export default {
                         Pagar
                     </button>
                 </template>
-            </Column>
+            </Column> -->
         </DataTable>
     </CardComponent>
 </template>

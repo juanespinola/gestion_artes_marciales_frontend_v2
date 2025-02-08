@@ -1,17 +1,51 @@
 <script>
 import CustomerLayout from '@/layouts/CustomerLayout.vue';
-import CardComponent from '@/components/Card/CardComponent.vue';
-import { useUserStore } from '@/stores/user';
-
+import NewsView from './news/NewsView.vue';
+import { onMounted, ref } from 'vue';
+import {useRouter} from 'vue-router'
 export default {
     components: {
         CustomerLayout,
-        CardComponent
+        NewsView,
     },
     setup() {
-        const userStore = useUserStore()
+        const router = useRouter()
+        const options = ref([
+            {
+                id: 1,
+                description: "Noticias",
+                route: 'ListAthleteNews',
+            },
+            {
+                id: 2,
+                description: "Eventos",
+                route: "ListAthleteEvents",
+            },
+            {
+                id: 3,
+                description: "Información",
+                route: "federation/news",
+            },
+            {
+                id: 4,
+                description: "Atletas",
+                route: "federation/news",
+            },
+            {
+                id: 5,
+                description: "Ranking",
+                route: "federation/news",
+            },
+        ]);
+
+
+        const handleSelectOption = (route) => {
+            router.push({ name: route })
+        }
+
         return {
-            userStore
+            options,
+            handleSelectOption
         }
     }
 }
@@ -19,23 +53,20 @@ export default {
 
 <template>
     <CustomerLayout>
-        <CardComponent>
-          
-        </CardComponent>
-
-        <h2 class="mt-10 mb-7.5 text-title-md2 font-bold text-black dark:text-white">Noticias</h2>
-        <div class="grid grid-cols-1 gap-7.5 sm:grid-cols-2 xl:grid-cols-3">
-            <CardComponent>
-                <div class="border-b border-stroke p-5 px-7.5 dark:border-strokedark">
-                    <h4 class="text-xl font-semibold text-black dark:text-white"><a aria-current="page"
-                            href="/ui-elements/cards#" class="router-link-active router-link-exact-active">Card
-                            Title here</a></h4>
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-3 2xl:gap-7.5">
+            <div v-for="option of options" @click="handleSelectOption(option.route)"
+                class="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div class="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
+                    {{ option.id }}
                 </div>
-                <div class="px-7.5 pt-6 pb-9">
-                    <p class="font-medium">Lorem ipsum dolor sit amet, vehiculaum ero felis loreum fitiona fringilla
-                        goes scelerisque Interdum et.</p>
+                <div class="mt-4 flex items-end justify-between">
+                    <div>
+                        <h4 class="text-title-md font-bold text-black dark:text-white">{{ option.description }}</h4>
+                        <!-- <span class="text-sm font-medium">Total views</span> -->
+                    </div>
+                    <!-- <span class="flex items-center gap-1 text-sm font-medium text-meta-3">0.43% </span> -->
                 </div>
-            </CardComponent>
+            </div>
         </div>
     </CustomerLayout>
 </template>
