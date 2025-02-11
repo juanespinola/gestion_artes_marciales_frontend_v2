@@ -17,7 +17,7 @@ export default {
 </script>
 
 <template>
-    <div
+    <div v-if="props.data.length > 0"
             class="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div class="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
                 <div class="my-4">
@@ -47,5 +47,8 @@ export default {
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-else>
+            En proceso de conteo de registros
         </div>
 </template>
