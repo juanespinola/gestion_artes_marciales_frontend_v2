@@ -152,7 +152,7 @@ export default {
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white">Tiempo Finalizado
                         </label>
-                        <input type="number" v-model="obj.match_timer"
+                        <input type="time" v-model="obj.match_timer"
                             class="w-full rounded border-[1.5px] text-black border-stroke bg-transparent py-3 px-5 font-normal outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:text-white dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
                     </div>
                     <div class="w-full">

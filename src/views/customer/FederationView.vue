@@ -29,7 +29,7 @@ export default {
             {
                 id: 4,
                 description: "Atletas",
-                route: "federation/news",
+                route: "ListAthlete",
             },
             {
                 id: 5,

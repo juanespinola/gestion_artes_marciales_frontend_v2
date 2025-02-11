@@ -6,6 +6,7 @@ import DropdownNotification from './DropdownNotification.vue'
 import DropdownUser from './DropdownUser.vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
+import DropdownAdmin from './DropdownAdmin.vue'
 
 const { toggleSidebar } = useSidebarStore()
 const sidebarStore = useSidebarStore()
@@ -97,6 +98,7 @@ const handleFederationSelection = () => {
 
         <!-- User Area -->
         <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete'"/>
+        <DropdownAdmin v-if="userStore.isOnline && userStore.user.type !== 'athlete'"/>
         <router-link to="login" v-if="!userStore.isOnline">Login</router-link>
         <!-- User Area -->
       </div>
