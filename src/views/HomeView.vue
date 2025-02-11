@@ -2,9 +2,19 @@
 import CustomerLayout from '@/layouts/CustomerLayout.vue';
 import FederationsView from '@/views/customer/FederationsView.vue'
 import { useUserStore } from '@/stores/user';
-import AdminLayout from '@/layouts/AdminLayout.vue';
-
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router'
 const userStore = useUserStore()
+const route = useRoute()
+const router = useRouter()
+
+onMounted(() => {
+    console.log(route.path)    
+    console.log(userStore.federation)    
+    if(!Object.keys(userStore.federation).length == 0 && route.path == '/'){
+        router.push({ name: 'FederationCards'})
+    }
+})
 </script>
 
 <template>

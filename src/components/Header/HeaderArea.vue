@@ -96,7 +96,7 @@ const handleFederationSelection = () => {
         </ul>
 
         <!-- User Area -->
-        <DropdownUser v-if="userStore.isOnline && userStore.user.type !== 'admin'"/>
+        <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete'"/>
         <router-link to="login" v-if="!userStore.isOnline">Login</router-link>
         <!-- User Area -->
       </div>

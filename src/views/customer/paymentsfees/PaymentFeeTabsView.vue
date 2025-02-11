@@ -4,18 +4,17 @@ import { ref, computed, onMounted, watch } from 'vue'
 import ListMembershipsComponent from './components/ListMembershipsComponent.vue';
 import ListInscriptionsComponent from './components/ListInscriptionsComponent.vue';
 import ListPaymentsComponent from './components/ListPaymentsComponent.vue';
-
+import { useRoute } from 'vue-router'
 
 
 export default {
     components: {
         CardComponent,
     },
-    props: {
-     
-    },
+    props: {},
     setup(props) {
-    
+        
+        const route = useRoute()
         // Lista de pestañas con sus nombres y componentes asociados
         const tabs = ref([
             { name: "memberships", label: "Membresias", component: ListMembershipsComponent },
@@ -41,6 +40,9 @@ export default {
             return tabs.value.filter(tab => tab.name !== "minorauthorization" || props.minor_verified);
         });
     
+        onMounted(() => {
+            if(route.query.pageFrom=='registerevent') selectTab('inscriptions');
+        })
 
         return {
             tabs,

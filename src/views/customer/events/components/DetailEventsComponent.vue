@@ -3,6 +3,7 @@ import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import TabsDetailEventsComponent from './TabsDetailEventsComponent.vue';
+import { useUserStore } from '@/stores/user';
 
 export default {
     components: {
@@ -25,13 +26,20 @@ export default {
                 data.value = response.data;
             }
         };
+        const userStore = useUserStore()
 
         onMounted(async () => {
             await fetchData(); // Cargar los datos al montar el componente
         });
 
         
-
+        const handleAthleteInscription = () => {
+            if(!userStore.isOnline){
+                router.push({ name: "Login"})
+                return;
+            }
+            router.push({ name: "NewRegisterEvent"})
+        }
 
         return {
             data,
@@ -39,6 +47,7 @@ export default {
             error,
             router,
             fetchData,
+            handleAthleteInscription,
             
         };
     }
@@ -49,6 +58,7 @@ export default {
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 class="text-title-md2 font-semibold text-black dark:text-white">{{ data.description }}</h2>
         <button
+            @click="handleAthleteInscription"
             class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-primary text-white">
             Inscripcion
         </button>
