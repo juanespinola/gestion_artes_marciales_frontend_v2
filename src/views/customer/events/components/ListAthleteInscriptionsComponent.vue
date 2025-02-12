@@ -68,8 +68,7 @@ export default {
             fetchData,
             expandedRows,
             textWeightField,
-
-            detailsMatchBrackets
+            detailsMatchBrackets,
         };
     },
 }
@@ -103,7 +102,7 @@ export default {
 
 
             <template #expansion="{ data, index }">
-                <DataTable :value="data.tariff_inscription.inscriptions" dataKey="index" rowGroupMode="subheader">
+                <DataTable :value="data?.tariff_inscription?.inscriptions" dataKey="index" rowGroupMode="subheader">
                     <template #empty> Sin Inscriptos. </template>
                     
                     <Column header="#" headerStyle="width:3rem">

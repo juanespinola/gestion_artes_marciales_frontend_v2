@@ -62,6 +62,11 @@ export default {
             router.push({ name: editDataRoute, params: { id, eventid: props.eventid } });
         };
 
+
+        const tariffCategoryData = (id) => {
+            router.push({ name: 'NewTariffCategory', params: { id, eventid: props.eventid } });
+        };
+
         const deleteCategoryData = async (id) => {
             const response = await destroy(collection, id);
             if (response.success) {
@@ -90,6 +95,7 @@ export default {
             newCategoryData,
             editCategoryData,
             deleteCategoryData,
+            tariffCategoryData,
             expandedRows,
         };
     },
@@ -150,6 +156,7 @@ export default {
                         <GroupActionButtonsComponent 
                             @editData="editCategoryData(slotProps.data.id)"
                             @deleteData="deleteCategoryData(slotProps.data.id)" 
+                            @tariffCategoryData="tariffCategoryData(slotProps.data.id)" 
                         />
                     </template>
                 </Column>

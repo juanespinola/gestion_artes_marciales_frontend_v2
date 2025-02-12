@@ -34,7 +34,7 @@ export default {
             {
                 id: 5,
                 description: "Ranking",
-                route: "federation/news",
+                route: "Ranking",
             },
         ]);
 

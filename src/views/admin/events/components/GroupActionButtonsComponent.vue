@@ -69,7 +69,7 @@ export default {
                 </svg>
             </div>
         </button>
-        <button @click="handleGroupCategoryData">
+        <!-- <button @click="handleGroupCategoryData">
             <div class="icon-container bg-red-600 p-2 rounded-full">
                 <svg class="fill-current text-white" width="18" height="18" viewBox="0 0 18 18" fill="currentColor"
                     xmlns="http://www.w3.org/2000/svg">
@@ -87,6 +87,6 @@ export default {
                         fill="currentColor"></path>
                 </svg>
             </div>
-        </button>
+        </button> -->
     </div>
 </template>
