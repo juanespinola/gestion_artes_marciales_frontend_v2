@@ -140,10 +140,10 @@ export default {
                         <div class="flex justify-end gap-4.5">
                             <button
                                 class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                                type="button" @click="$router.go(-1)"> Cancel </button>
+                                type="button" @click="$router.go(-1)">Cancelar</button>
                             <button
                                 class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                                type="submit"> Save </button>
+                                type="submit"> Guardar</button>
                         </div>
                     </div>
 

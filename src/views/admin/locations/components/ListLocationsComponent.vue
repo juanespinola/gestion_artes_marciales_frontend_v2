@@ -1,13 +1,15 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
-import useData from '@/composables/useData';
-import { useRouter } from 'vue-router';
-import { onMounted, ref } from 'vue';
-import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
+import useData from '@/composables/useData'
+import { useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue';
+
 
 export default {
-    components: { AdminLayout, CardComponent, BasicTableComponent },
+    components: { CardComponent, DataTable, Column, GroupActionButtonsComponent },
     setup() {
         const collection = 'location';
         const newDataRoute = 'NewLocation';
@@ -15,8 +17,8 @@ export default {
         const router = useRouter();
         const columns = [
             { field: 'description', header: 'Descripción' },
-            { field: 'city_id', header: 'Ciudad' },
-            { field: 'city_id', header: 'Pais' },
+            { field: 'city.description', header: 'Ciudad' },
+            { field: 'city.country.description', header: 'Pais' },
             { field: 'address', header: 'Dirección' },
         ];
         const data = ref([]);
@@ -67,11 +69,35 @@ export default {
 </script>
 
 <template>
-    <BasicTableComponent 
-        :data="data" 
-        :columns="columns"
-        :newData="newData"
-        :editData="editData"
-        :deleteData="deleteData"
-    />
+    <CardComponent>
+        <DataTable :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10" dataKey="id"
+            paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+            :rowsPerPageOptions="[5, 10, 25]"
+            currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Datos"
+            v-model:expandedRows="expandedRows">
+            <template #header>
+                <div class="flex justify-between">
+                    <div></div>
+                    <button @click="newData"
+                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button>
+                </div>
+            </template>
+            <!-- <Column expander style="width: 5rem" /> -->
+            <Column header="#" headerStyle="width:3rem">
+                <template #body="slotProps">
+                    {{ slotProps.index + 1 }}
+                </template>
+            </Column>
+            <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 30%">
+            </Column>
+            <Column header="Acciones" headerStyle="width: 40%; text-align: center"
+                bodyStyle="text-align: center; overflow: visible">
+                <template #body="slotProps">
+                    <GroupActionButtonsComponent 
+                        @editData="editData(slotProps.data.id)"
+                        @deleteData="deleteData(slotProps.data.id)" />
+                </template>
+            </Column>
+        </DataTable>
+    </CardComponent>
 </template>
