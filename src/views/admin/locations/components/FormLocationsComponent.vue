@@ -1,12 +1,12 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import { useRouter } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
+import SelectComponent from '@/components/Select/SelectComponent.vue';
 
 export default {
     components: {
-        AdminLayout
+        SelectComponent
     },
     props: {
         id: {
@@ -15,7 +15,7 @@ export default {
         },
     },
     setup(props) {
-        const { find, update, create } = useData();
+        const { find, update, create, fetchAll } = useData();
         const collection = 'location';
         const obj = ref({
             description: '',
@@ -25,6 +25,24 @@ export default {
         const error = ref(null);
         const router = useRouter();
         const isEditing = computed(() => !!props.id);
+        const countries = ref([]);
+        const cities = ref([]);
+
+        const fetchCountries = async () => {
+            const response = await fetchAll('athlete/countries');
+            if (response.success) {
+                countries.value = response.data
+            }
+        };
+
+        const fetchCities = async (country_id) => {
+            const response = await create('athlete/cities', { country_id });
+            if (response.success) {
+                cities.value = response.data
+            }
+        };
+
+
 
         // Función para obtener los datos si estamos en edición
         const fetchProduct = async () => {
@@ -63,15 +81,40 @@ export default {
         };
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
-        onMounted(() => {
-            if (isEditing.value) fetchProduct();
+        onMounted(async () => {
+            fetchCountries()
+            fetchCities(obj.value.country_id)
+            if (isEditing.value) await fetchProduct();
         });
 
-        watch(() => props.id, (newId) => {
-            if (newId) fetchProduct();
+        watch(() => props.id, async (newId) => {
+            fetchCountries()
+            fetchCities(obj.value.country_id)
+            if (newId) await fetchProduct();
         });
 
-        return { obj, isEditing, saveData, error, validateForm };
+
+        const handleCountrySelected = (itemSelected) => {
+            obj.value.country_id = (itemSelected.id)
+            fetchCities(itemSelected.id)
+        }
+
+
+        const handleCitySelected = (itemSelected) => {
+            obj.value.city_id = (itemSelected.id)
+        }
+
+        return { 
+            obj, 
+            isEditing, 
+            saveData, 
+            error, 
+            validateForm,
+            countries,
+            cities,
+            handleCountrySelected,
+            handleCitySelected
+        };
     }
 }
 </script>
@@ -81,6 +124,7 @@ export default {
         <div class="border-b border-stroke py-4 px-7 dark:border-strokedark">
             <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
         </div>
+        {{ obj }}
         <div class="p-7">
             <form @submit.prevent="saveData">
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -94,16 +138,12 @@ export default {
 
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full sm:w-1/2">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="city_id">Ciudad</label>
-                        <input
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="city_id" id="city_id" v-model="obj.city_id">
+                        <SelectComponent :data="countries" :title="'Pais'" :selectedOption="obj.country_id"
+                        @obj-selected="handleCountrySelected" />
                     </div>
                     <div class="w-full sm:w-1/2">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="description">Pais</label>
-                        <!-- <input
-                            class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="description" id="description" v-model="obj.description"> -->
+                        <SelectComponent :data="cities" :title="'Ciudad'" :selectedOption="obj.city_id"
+                        @obj-selected="handleCitySelected" />
                     </div>
                 </div>
 

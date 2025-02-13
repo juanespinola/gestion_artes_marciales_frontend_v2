@@ -15,6 +15,7 @@ import RouteSanctions from '@/views/admin/sanctions/routes'
 import RouteEvents from '@/views/admin/events/routes'
 import RouteRequests from '@/views/admin/requests/routes'
 import RouteMinorAuthorizations from '@/views/admin/minorauthorization/routes'
+import RouteMembershipTypes from '@/views/admin/membershiptypes/routes'
 
 export default [
     ...RouteUsers,
@@ -34,4 +35,5 @@ export default [
     ...RouteEvents,
     ...RouteRequests,
     ...RouteMinorAuthorizations,
+    ...RouteMembershipTypes,
 ]

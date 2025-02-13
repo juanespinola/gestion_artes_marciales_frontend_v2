@@ -11,7 +11,7 @@ export default function useData() {
     const isLoading = ref(false);
     const error = ref<string | null>(null);
     const { notification } = useNotification()
-
+    // const toast = notification()
     // Configurar instancia de Axios
     const instance = axios.create({ baseURL: baseUrl });
 
@@ -82,7 +82,7 @@ export default function useData() {
             return { success: true, data: response.data };
         } catch (err) {
             error.value = handleError(err);
-            return { success: false, error: error.value };
+            return { success: false, error: error.value, message: err.response.data.messages };
         } finally {
             isLoading.value = false;
         }
@@ -96,7 +96,7 @@ export default function useData() {
             return { success: true, data: response.data };
         } catch (err) {
             error.value = handleError(err);
-            return { success: false, error: error.value };
+            return { success: false, error: error.value, message: err.response.data.messages };
         } finally {
             isLoading.value = false;
         }
@@ -110,7 +110,7 @@ export default function useData() {
             return { success: true, data: response.data };
         } catch (err) {
             error.value = handleError(err);
-            return { success: false, error: error.value };
+            return { success: false, error: error.value, message: err.response.data.messages };
         } finally {
             isLoading.value = false;
         }

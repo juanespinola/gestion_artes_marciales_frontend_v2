@@ -3,10 +3,12 @@ import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
+import DatePicker from 'primevue/datepicker';
 
 export default {
     components: {
-        SelectComponent
+        SelectComponent,
+        DatePicker
     },
     props: {
         eventid: {
@@ -191,16 +193,18 @@ export default {
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Fecha
                             Inicio</label>
-                        <input
+                        <!-- <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="email" id="email" v-model="obj.initial_date">
+                            type="text" name="email" id="email" v-model="obj.initial_date"> -->
+                        <DatePicker v-model="obj.initial_date" showIcon fluid iconDisplay="input" />
                     </div>
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Fecha
                             Fin</label>
-                        <input
+                        <!-- <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="email" id="email" v-model="obj.final_date">
+                            type="text" name="email" id="email" v-model="obj.final_date"> -->
+                        <DatePicker v-model="obj.final_date" showIcon fluid iconDisplay="input" />
                     </div>
                 </div>
 
@@ -208,22 +212,34 @@ export default {
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Hora
                             Inicio</label>
-                        <input
+                        <!-- <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="email" id="email" v-model="obj.initial_time">
+                            type="text" name="email" id="email" v-model="obj.initial_time"> -->
+                        <DatePicker v-model="obj.initial_time" showIcon fluid iconDisplay="input" timeOnly>
+                            <template #inputicon="slotProps">
+                                <i class="pi pi-clock" @click="slotProps.clickCallback" />
+                            </template>
+                        </DatePicker>
                     </div>
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Hora
                             Fin</label>
-                        <input
+                        <!-- <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="email" id="email" v-model="obj.final_time">
+                            type="text" name="email" id="email" v-model="obj.final_time"> -->
+                        <DatePicker v-model="obj.final_time" showIcon fluid iconDisplay="input" timeOnly>
+                            <template #inputicon="slotProps">
+                                <i class="pi pi-clock" @click="slotProps.clickCallback" />
+                            </template>
+                        </DatePicker>
                     </div>
                 </div>
 
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full ">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Costo de Evento (0 si es Torneo)</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Costo de
+                            Evento (0 si es
+                            Torneo)</label>
                         <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                             type="number" name="email" id="email" v-model="obj.inscription_fee">

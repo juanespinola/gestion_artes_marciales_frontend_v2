@@ -1,14 +1,17 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import IconField from 'primevue/iconfield';
+import InputIcon from 'primevue/inputicon';
+import InputText from 'primevue/inputtext';
+import { FilterMatchMode } from '@primevue/core/api';
 
 export default {
-    components: { AdminLayout, CardComponent, DataTable, Column },
+    components: { CardComponent, DataTable, Column, IconField, InputIcon, InputText, FilterMatchMode },
     setup() {
         const collection = 'minor_authorization';
         const newDataRoute = 'NewMinorAuthorization';
@@ -22,6 +25,10 @@ export default {
         ];
         const data = ref([]);
         const { isLoading, error, fetchAll, destroy } = useData();
+
+        const filters = ref({
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        })
 
         const fetchData = async () => {
             const response = await fetchAll(collection);
@@ -63,6 +70,7 @@ export default {
             newData,
             editData,
             deleteData,
+            filters,
         };
     },
 };
@@ -70,16 +78,22 @@ export default {
 
 <template>
     <CardComponent>
-        <DataTable :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10" dataKey="id"
+        <DataTable v-model:filters="filters" :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10" dataKey="id"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25]"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Datos"
-            v-model:expandedRows="expandedRows">
+            v-model:expandedRows="expandedRows"
+            :globalFilterFields="['athlete.name']">
             <template #header>
                 <div class="flex justify-between">
-                    <div></div>
-                    <button @click="newData"
-                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button>
+                    <div>
+                        <IconField>
+                            <InputIcon class="pi pi-search" />
+                            <InputText v-model="filters['global'].value" placeholder="Buscar" />
+                        </IconField>
+                    </div>
+                    <!-- <button @click="newData"
+                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button> -->
                 </div>
             </template>
             <Column header="#" headerStyle="width:3rem">

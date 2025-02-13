@@ -92,8 +92,8 @@ export default {
                     <div></div>
                     <!-- <button
                         class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-black text-white rounded-full">Exportar</button> -->
-                    <button @click="newData"
-                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button>
+                    <!-- <button @click="newData"
+                        class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-meta-3 text-white rounded-full">Nuevo</button> -->
                 </div>
             </template>
             <Column header="#" headerStyle="width:3rem">

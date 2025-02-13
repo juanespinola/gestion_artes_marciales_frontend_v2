@@ -5,12 +5,14 @@ import useData from '@/composables/useData';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
+import CardComponent from '@/components/Card/CardComponent.vue';
 
 export default {
     components: {
         DataTable,
         Column,
-        GroupActionButtonsComponent
+        GroupActionButtonsComponent,
+        CardComponent
     },
     props: {
         eventid: {
@@ -103,6 +105,7 @@ export default {
 </script>
 
 <template>
+     <CardComponent>
     <DataTable :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10" dataKey="id"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Datos"
@@ -165,4 +168,5 @@ export default {
         </template>
 
     </DataTable>
+</CardComponent>
 </template>

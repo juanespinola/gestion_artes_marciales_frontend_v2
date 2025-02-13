@@ -2,7 +2,7 @@
 import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useUserStore } from '@/stores/user';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export default {
@@ -29,7 +29,7 @@ export default {
             membership_id: '',
             inscription_id: '',
             payment_for: '',
-            json_request: '',
+            json_request: {},
             total_payment: '',
             amount_fee: '',
             description: '',
@@ -60,7 +60,7 @@ export default {
                 obj.value.amount_fee = response.data.amount_fee
                 obj.value.total = response.data.amount_fee
                 obj.value.membership_id = props.membership_id
-                obj.value.total_payment = response.data.tariff_inscription ? response.data.tariff_inscription.price : response.data.inscription_fee 
+                obj.value.total_payment = response.data.tariff_inscription ? response.data.tariff_inscription.price : response.data.inscription_fee
                 obj.value.payment_for = 'inscription'
             }
         };
@@ -82,14 +82,14 @@ export default {
 
         const payment = async () => {
             try {
-              const response = await create('athlete/payment/create', obj.value)
-              if(response.success){
-                router.push({ 
-                        name: "Payment", 
+                const response = await create('athlete/payment/create', obj.value)
+                if (response.success) {
+                    router.push({
+                        name: "Payment",
                         params: { id: obj.value.membership_id ? obj.value.membership_id : obj.value.inscription_id },
-                        query: { payment_gateway: obj.value.payment_gateway, response_bancard: response.data.data.process_id  }
+                        query: { payment_gateway: obj.value.payment_gateway, response_bancard: response.data.data.process_id }
                     })
-              }  
+                }
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }
@@ -101,6 +101,15 @@ export default {
             }
             if (props.inscription_id) {
                 await fetchInscription()
+            }
+        })
+
+        watch([() => obj.value.payment_number, () => obj.value.reason], () => {
+            if (obj.value.payment_gateway === 'transferencia') {
+                obj.value.json_request = {
+                    numero_comprobante: obj.value.payment_number,
+                    motivo: obj.value.reason
+                }
             }
         })
 
@@ -124,6 +133,7 @@ export default {
                 "Pagar Inscripción" }}</h3>
         </div>
         <div class="p-7">
+            {{ obj }}
             <form @submit.prevent="payment">
 
                 <div class="mb-5.5">
@@ -165,7 +175,7 @@ export default {
                 </div>
 
 
-                <div :class="{'hidden': obj.payment_gateway !== 'transferencia'}">
+                <div :class="{ 'hidden': obj.payment_gateway !== 'transferencia' }">
                     <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                         <div class="w-full">
                             <label class="mb-3 block text-sm font-medium text-black dark:text-white"
@@ -176,11 +186,11 @@ export default {
 
                     <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                         <div class="w-full">
-                            <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="motivo">Motivo
+                            <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="reason">Motivo
                                 de Transferencia*</label>
                             <input
                                 class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                type="text" name="motivo" id="motivo"
+                                type="text" name="reason" id="reason"
                                 placeholder="Inscripcion / Membresia de Nombre Completo de Atleta - CI"
                                 v-model="obj.reason">
                         </div>
@@ -189,24 +199,24 @@ export default {
                     <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                         <div class="w-full">
                             <label class="mb-3 block text-sm font-medium text-black dark:text-white"
-                                for="number_payment">Número de Comprobante*</label>
+                                for="payment_number">Número de Comprobante*</label>
                             <input
                                 class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                type="text" name="number_payment" id="number_payment"
-                                placeholder="789456123" v-model="obj.number_payment">
+                                type="text" name="payment_number" id="payment_number" placeholder="789456123"
+                                v-model="obj.payment_number">
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white"
-                            for="email">Concepto de Pago: {{ obj.description }}</label>
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white"
-                            for="email">Total: {{obj.total_payment}}</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Concepto de
+                            Pago: {{ obj.description }}</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white" for="email">Total:
+                            {{ obj.total_payment }}</label>
                     </div>
 
-                    
+
                 </div>
 
                 <div class="flex justify-end gap-4.5">
@@ -214,11 +224,12 @@ export default {
                         class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
                         type="button" @click="$router.go(-1)"> Cancelar </button>
                     <button
-                        class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90" :class="{
-                            'disabled:cursor-default disabled:bg-whiter dark:focus:border-primary dark:disabled:bg-black opacity-50': obj.payment_gateway == 'transferencia' && (!obj.reason || !obj.number_payment)
-                        }"
-                        type="submit"
-                        :disabled="obj.payment_gateway == 'transferencia' && (!obj.reason || !obj.number_payment)"> Pagar </button>
+                        class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                        :class="{
+                            'disabled:cursor-default disabled:bg-whiter dark:focus:border-primary dark:disabled:bg-primary dark:disabled:opacity-50 ': obj.payment_gateway == 'transferencia' && (!obj.reason || !obj.number_payment)
+                        }" type="submit"
+                        :disabled="obj.payment_gateway == 'transferencia' && (!obj.reason || !obj.payment_number)">
+                        Pagar </button>
                 </div>
             </form>
         </div>

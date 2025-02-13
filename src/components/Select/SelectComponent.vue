@@ -59,7 +59,7 @@ export default {
 <template>
     <div>
         <label class="mb-3 block text-sm font-medium text-black dark:text-white">
-            {{ title }} {{ this.isDisabled }}
+            {{ title }}
         </label>
         <div class="relative z-20 bg-white dark:bg-form-input">
             <span class="absolute top-1/2 left-4 z-30 -translate-y-1/2">
@@ -81,7 +81,7 @@ export default {
                 'text-black dark:text-white': selectedOption,
                 'text-gray-500': !selectedOption,
                 'disabled:cursor-default disabled:bg-whiter dark:focus:border-primary dark:disabled:bg-black opacity-50': this.isDisabled
-            }" class="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+            }" class="relative z-20 w-full appearance-none rounded border border-stroke bg-gray py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-meta-4"
                 @change="selectProduct" :disabled="this.isDisabled">
                 <option value="" disabled>Select Option</option>
                 <option v-for="row in data" :key="row.id" :value="row.id" class="text-body dark:text-bodydark"

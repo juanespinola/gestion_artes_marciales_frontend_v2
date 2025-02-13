@@ -1,23 +1,20 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
-import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
-import useNotification from '@/composables/useNotification';
-
 
 export default {
-    components: { AdminLayout, CardComponent, BasicTableComponent },
+    components: {  BasicTableComponent },
     setup() {
-        const { notification } = useNotification()
-        const collection = 'new';
-        const newDataRoute = 'NewNew';
-        const editDataRoute = 'EditNew';
+        const collection = 'typemembership';
+        const newDataRoute = 'NewMembershipType';
+        const editDataRoute = 'EditMembershipType';
         const router = useRouter();
         const columns = [
-            { field: 'title', header: 'Titulo' },
+            { field: 'description', header: 'Descripción' },
+            { field: 'price', header: 'Precio' },
+            { field: 'total_number_fee', header: 'Total Cuotas' },
             { field: 'status', header: 'Estado' },
         ];
         const data = ref([]);
@@ -42,7 +39,6 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
-                notification(response?.data.messages)
             }
         };
 
@@ -75,6 +71,5 @@ export default {
         :newData="newData"
         :editData="editData"
         :deleteData="deleteData"
-        :isActiveSearchGlobal="true"
     />
 </template>

@@ -8,6 +8,7 @@ import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
 import ModalWeightFormComponent from './ModalWeightFormComponent.vue';
 import GenerateMatchBracketsModalFormComponent from './GenerateMatchBracketsModalFormComponent.vue';
 import useNotification from '@/composables/useNotification';
+import CardComponent from '@/components/Card/CardComponent.vue';
 
 export default {
     components: {
@@ -15,7 +16,8 @@ export default {
         Column,
         GroupActionButtonsComponent,
         ModalWeightFormComponent,
-        GenerateMatchBracketsModalFormComponent
+        GenerateMatchBracketsModalFormComponent,
+        CardComponent
     },
     props: {
         eventid: {
@@ -167,7 +169,7 @@ export default {
 </script>
 
 <template>
-    <div>
+    <CardComponent>
         <DataTable :value="data" tableStyle="min-width: 50rem" dataKey="id" v-model:expandedRows="expandedRows">
 
             <Column expander style="width: 1rem" />
@@ -256,5 +258,5 @@ export default {
             :title="'Generar Llaves de Combate'" 
             :data="modalGenerateMatchBracketsData"
             @close="closeGenerateMatchBracketModal" />
-    </div>
+    </CardComponent>
 </template>

@@ -114,7 +114,7 @@ export default {
                         </div>
                         <div class="text-right sm:w-8/12 xl:w-4/12"><button
                                 class="inline-flex rounded bg-primary py-1 px-3 font-medium text-white hover:bg-opacity-90 sm:py-2.5 sm:px-6">
-                                Download </button></div>
+                                Descargar </button></div>
                     </div>
                 </div>
 

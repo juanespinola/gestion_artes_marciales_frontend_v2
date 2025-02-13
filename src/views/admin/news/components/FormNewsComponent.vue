@@ -4,6 +4,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
 import Editor from 'primevue/editor'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
+import useNotification from '@/composables/useNotification'
 
 export default {
     components: {
@@ -17,6 +18,7 @@ export default {
         },
     },
     setup(props) {
+        const { notification } = useNotification()
         const { find, update, create } = useData();
         const collection = 'new';
         const obj = ref({
@@ -24,7 +26,7 @@ export default {
             content: '',
             status: '',
         });
-        const error = ref(null);
+        const error = ref({});
         const router = useRouter();
         const isEditing = computed(() => !!props.id);
 
@@ -42,13 +44,28 @@ export default {
         const saveData = async () => {
             try {
                 if (isEditing.value) {
-                    await update(collection, props.id, obj.value);
-                    console.log('Producto actualizado:', obj.value);
+                    const response = await update(collection, props.id, obj.value);
+                    console.log(response)
+                    if(!response.success){
+                        Object.keys(response?.message).forEach((key) => {
+                            notification(response?.message[key][0], "error");  // Mostrar cada error en un toast
+                        });
+                        return;
+                    }
+                    notification(response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
+
                 } else {
-                    await create(collection, obj.value);
-                    console.log('Producto creado:', obj.value);
+                    const response = await create(collection, obj.value);
+                    if(!response.success){
+                        Object.keys(response?.message).forEach((key) => {
+                            notification(response?.message[key][0], "error");  // Mostrar cada error en un toast
+                        });
+                        return;
+                    }
+                    notification(response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
                 }
-                router.go(-1); // Redirige a la lista después de guardar
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }
@@ -108,6 +125,13 @@ export default {
                     <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
                 </div>
                 <div class="p-7">
+                    
+                    <div v-for="(value, key) in obj" :key="key">
+                        <!-- {{ error }} -->
+                        <p v-if="error[key]" class="text-red-500">
+                            {{ error[key][0] }}
+                        </p>
+                    </div>
                     <form @submit.prevent="saveData">
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">

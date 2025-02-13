@@ -5,17 +5,16 @@ import "vue3-toastify/dist/index.css";
 
 export default function useNotification() {
 
-    const notification = () => {
-
-        return toast("Hello! Wow so easy!", {
-            "theme": "dark",
-            "type": "success",
-            "position": "bottom-right",
-            "transition": "flip",
-            "dangerouslyHTMLString": true
-          })
-    }
-
+    const notification = (message, type = "success") => {
+        return toast(message, {
+          theme: "dark",
+          type: type,  // Cambia el tipo de notificación
+          position: "bottom-right",
+          transition: "flip",
+          dangerouslyHTMLString: true,
+          autoClose: 5000, // Se mantiene visible por 5s
+        });
+      };
 
 
     return {

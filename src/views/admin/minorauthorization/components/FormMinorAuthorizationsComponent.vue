@@ -123,7 +123,7 @@ export default {
                                             :class="{
                                                 'border-primary bg-gray dark:bg-transparent': obj.authorized
                                             }">
-                                            <span class="!opacity-100 opacity-0" :class="{ 'hidden' : !obj.authorized }">
+                                            <span class="opacity-100" :class="{ 'hidden' : !obj.authorized }">
                                                 <svg width="11" height="8" viewBox="0 0 11 8" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path
