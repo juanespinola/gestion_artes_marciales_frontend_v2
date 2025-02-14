@@ -4,29 +4,46 @@ import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
-import DatePicker from 'primevue/datepicker';
+
 export default {
     components: {
-        SelectComponent,
-        DatePicker
+        SelectComponent
     },
     props: {
-        obj: {
-            type: Object,
-            required: true,
+        id: {
+            type: String,
+            required: false,
         },
     },
     setup(props) {
         const { update, create, fetchAll } = useData();
         const collection = 'athlete/profile';
-        
+        const obj = ref({
+            name: '',
+            email: '',
+            document: '',
+            phone: '',
+            gender: '',
+            birthdate: '',
+            country_id: '',
+            city_id: '',
+            type_document_id: '',
+            belt_id: '',
+        });
         const error = ref(null);
         const router = useRouter();
+        const isEditing = computed(() => !!props.id);
         const countries = ref([]);
         const cities = ref([]);
         const typesdocuments = ref([]);
 
-        
+        // Función para obtener los datos si estamos en edición
+        const fetchProduct = async () => {
+            const response = await fetchAll(collection);
+            if (response.success) {
+                obj.value = response.data
+            }
+        };
 
         const fetchCountries = async () => {
             const response = await create('athlete/countries', {});
@@ -49,12 +66,44 @@ export default {
             }
         };
 
+
+        // Función para guardar los datos (crear o actualizar)
+        const saveData = async () => {
+            try {
+                if (isEditing.value) {
+                    await update(collection, props.id, obj.value);
+                    console.log('Producto actualizado:', obj.value);
+                } else {
+                    await create(collection, obj.value);
+                    console.log('Producto creado:', obj.value);
+                }
+                router.go(-1); // Redirige a la lista después de guardar
+            } catch (err) {
+                console.error('Error al guardar el registro:', err.message);
+            }
+        };
+
+        // Función de validación
+        const validateForm = () => {
+            const { description } = obj.value;
+            if (!description) {
+                error.value = "La descripción es obligatoria.";
+                return false;
+            }
+            return true;
+        };
+
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
         onMounted(async () => {
+          
             fetchTypesDocuments()
             fetchCountries()
             fetchCities(obj.value.country_id)
-         
+           
+        });
+
+        watch(() => props.id, (newId) => {
+            // if (newId) fetchProduct();
         });
 
         const handleCountrySelected = (itemSelected) => {
@@ -78,7 +127,11 @@ export default {
     
 
         return { 
+            obj, 
+            isEditing, 
+            saveData, 
             error, 
+            validateForm,
             handleCountrySelected,
             handleCitySelected,
             handleGenderSelected,
@@ -126,7 +179,10 @@ export default {
                             <div class="w-full">
                                 <label class="mb-3 block text-sm font-medium text-black dark:text-white"
                                     for="birthdate">Fecha de Nacimiento</label>
-                                    <DatePicker v-model="obj.birthdate" showIcon fluid iconDisplay="input" />
+                                <input
+                                    class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    type="text" name="birthdate" id="birthdate"
+                                    v-model="obj.birthdate">
                             </div>
                             <div class="w-full">
                                 <SelectComponent
