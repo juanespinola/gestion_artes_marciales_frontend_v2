@@ -133,7 +133,6 @@ export default {
                 "Pagar Inscripción" }}</h3>
         </div>
         <div class="p-7">
-            {{ obj }}
             <form @submit.prevent="payment">
 
                 <div class="mb-5.5">

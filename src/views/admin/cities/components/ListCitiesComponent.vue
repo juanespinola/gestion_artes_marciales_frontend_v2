@@ -25,18 +25,17 @@ export default {
 
         const fetchData = async (countryId) => {
             const response = await fetchAll(`city/bycountry/${countryId}`);
-            console.log(response)
             if (response.success) {
                 data.value = response.data;
             }
         };
 
         const newData = () => {
-            router.push({ name: newDataRoute });
+            router.push({ name: newDataRoute, params: { countryId: props.countryId } });
         };
 
         const editData = (id) => {
-            router.push({ name: editDataRoute, params: { id } });
+            router.push({ name: editDataRoute, params: { id, countryId:props.countryId } });
         };
 
         const deleteData = async (id) => {

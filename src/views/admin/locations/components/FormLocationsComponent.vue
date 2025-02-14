@@ -21,6 +21,7 @@ export default {
             description: '',
             city_id: '',
             address: '',
+            country_id: '',
         });
         const error = ref(null);
         const router = useRouter();
@@ -28,17 +29,32 @@ export default {
         const countries = ref([]);
         const cities = ref([]);
 
-        const fetchCountries = async () => {
-            const response = await fetchAll('athlete/countries');
+        const fetchCountries = async (city_id = null) => {
+            // if(city_id){
+            //     const response = await create('athlete/countries', { city_id });
+            //     if (response.success) {
+            //         countries.value = response.data
+            //     }
+            //     return;
+            // }
+            const response = await create('athlete/countries', {});
             if (response.success) {
                 countries.value = response.data
             }
         };
 
-        const fetchCities = async (country_id) => {
-            const response = await create('athlete/cities', { country_id });
-            if (response.success) {
-                cities.value = response.data
+        const fetchCities = async (country_id = null, city_id = null) => {
+            if(country_id){
+                const response = await create('athlete/cities', { country_id });
+                if (response.success) {
+                    cities.value = response.data
+                }
+            }
+            if(city_id){
+                const response = await create('athlete/cities', { city_id: props.city_id });
+                if (response.success) {
+                    cities.value = response.data
+                }
             }
         };
 
@@ -49,7 +65,10 @@ export default {
             if (isEditing.value) {
                 const response = await find(collection, props.id);
                 if (response.success) {
-                    obj.value = response.data;
+                    obj.value.description = response.data.description;
+                    obj.value.city_id = response.data.city_id;
+                    obj.value.address = response.data.address;           
+                    obj.value.country_id = response.data.city.country_id;           
                 }
             }
         };
@@ -82,15 +101,19 @@ export default {
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
         onMounted(async () => {
-            fetchCountries()
-            fetchCities(obj.value.country_id)
-            if (isEditing.value) await fetchProduct();
+            if (isEditing.value) {
+                await fetchProduct();
+                await fetchCountries(obj.value.city_id)
+            }
+            await fetchCities(null, obj.value.city_id)
         });
 
         watch(() => props.id, async (newId) => {
-            fetchCountries()
-            fetchCities(obj.value.country_id)
-            if (newId) await fetchProduct();
+            if (newId) {
+                await fetchProduct();
+                await fetchCountries(obj.value.city_id)
+            }
+            await fetchCities(null, obj.value.city_id)
         });
 
 
@@ -124,7 +147,6 @@ export default {
         <div class="border-b border-stroke py-4 px-7 dark:border-strokedark">
             <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
         </div>
-        {{ obj }}
         <div class="p-7">
             <form @submit.prevent="saveData">
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">

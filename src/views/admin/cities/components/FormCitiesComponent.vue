@@ -1,14 +1,18 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import { useRouter } from 'vue-router';
 import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
+import SelectComponent from '@/components/Select/SelectComponent.vue';
 
 export default {
     components: {
-        AdminLayout
+        SelectComponent
     },
     props: {
+        countryId: {
+            type: String,
+            required: true,
+        },
         id: {
             type: String,
             required: false,
@@ -19,6 +23,8 @@ export default {
         const collection = 'city';
         const obj = ref({
             description: '',
+            status: '',
+            country_id: props.countryId
         });
         const error = ref(null);
         const router = useRouter();
@@ -50,6 +56,10 @@ export default {
             }
         };
 
+        const handleStatusSelected = (itemSelected) => {
+            obj.value.status = JSON.parse(itemSelected.id)
+        }
+
         // Función de validación
         const validateForm = () => {
             const { description } = obj.value;
@@ -69,12 +79,13 @@ export default {
             if (newId) fetchProduct();
         });
 
-        return { obj, isEditing, saveData, error, validateForm };
+        return { obj, isEditing, saveData, error, validateForm, handleStatusSelected};
     }
 }
 </script>
 
 <template>
+    {{ obj }}
     <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div class="border-b border-stroke py-4 px-7 dark:border-strokedark">
             <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
@@ -87,6 +98,13 @@ export default {
                         <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                             type="text" name="description" id="description" v-model="obj.description">
+                    </div>
+                </div>
+
+                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                    <div class="w-full">
+                        <SelectComponent :data="[{ id: 'true', name: 'Activo' }, { id: 'false', name: 'Inactivo' }]"
+                            :title="'Estado'" :selectedOption="obj.status" @obj-selected="handleStatusSelected" />
                     </div>
                 </div>
 
