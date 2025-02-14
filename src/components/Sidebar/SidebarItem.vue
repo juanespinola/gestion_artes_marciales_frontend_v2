@@ -2,11 +2,13 @@
 import { useSidebarStore } from '@/stores/sidebar'
 import { useRoute } from 'vue-router'
 import SidebarDropdown from './SidebarDropdown.vue'
+import { useUserStore } from '@/stores/user'
 
 const sidebarStore = useSidebarStore()
 
 const props = defineProps(['item', 'index'])
 const currentPage = useRoute().name
+
 
 interface SidebarItem {
   label: string
@@ -20,6 +22,7 @@ const handleItemClick = () => {
     return props.item.children.some((child: SidebarItem) => sidebarStore.selected === child.label)
   }
 }
+
 </script>
 
 <template>

@@ -28,6 +28,7 @@ const handleFederationSelection = () => {
       <div class="flex items-center gap-2 sm:gap-4 lg:hidden">
         <!-- Hamburger Toggle BTN -->
         <button
+          v-if="userStore.isOnline && userStore.user.type !== 'athlete'"
           class="z-99999 block rounded-sm border border-stroke bg-white p-1.5 shadow-sm dark:border-strokedark dark:bg-boxdark lg:hidden"
           @click="
             () => {
@@ -64,9 +65,9 @@ const handleFederationSelection = () => {
           </span>
         </button>
         <!-- Hamburger Toggle BTN -->
-        <router-link class="block flex-shrink-0 lg:hidden" to="/">
+        <!-- <router-link class="block flex-shrink-0 lg:hidden" to="/">
           <img src="@/assets/images/logo/logo-icon.svg" alt="Logo" />
-        </router-link>
+        </router-link> -->
       </div>
       <div class="hidden sm:block">
         <div class="border-stroke p-5 px-7.5 dark:border-strokedark">
@@ -82,18 +83,17 @@ const handleFederationSelection = () => {
             <!-- Dark Mode Toggler -->
             <DarkModeSwitcher />
             <!-- Dark Mode Toggler -->
-             
+               
           </li>
-          <button v-if="!userStore.isOnline" @click="handleFederationSelection">Federaciones</button>
-
-
+          <li>
+            <DropdownMessage />
+          </li>
+          <li>
+            <button v-if="!userStore.isOnline" @click="handleFederationSelection">Federaciones</button>
+          </li>
           <!-- Notification Menu Area -->
           <!-- <DropdownNotification /> -->
           <!-- Notification Menu Area -->
-
-          <!-- Chat Notification Area -->
-          <!-- <DropdownMessage /> -->
-          <!-- Chat Notification Area -->
         </ul>
 
         <!-- User Area -->

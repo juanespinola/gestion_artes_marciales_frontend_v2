@@ -46,7 +46,7 @@ export default {
         };
 
         const fetchCountries = async () => {
-            const response = await fetchAll('athlete/countries');
+            const response = await create('athlete/countries', {});
             if (response.success) {
                 countries.value = response.data
             }

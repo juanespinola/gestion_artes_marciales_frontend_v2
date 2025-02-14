@@ -116,7 +116,7 @@ export default {
                                     </div>
                                     <div class="mt-6 text-center">
                                         <p class="font-medium">Eres Atleta?
-                                            <a href="/signup" class="text-primary">Sign up</a>
+                                            <a href="/register" class="text-primary">Registrate</a>
                                         </p>
                                     </div>
                                 </form>
