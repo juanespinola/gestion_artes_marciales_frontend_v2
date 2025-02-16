@@ -74,11 +74,25 @@ const MyPreset = definePreset(Aura, {
                     },
                 }
             }
+        },
+        stepper: {
+                colorScheme: {
+                    light: {
+                        steppanel: {
+                            // background: '#EFF4FB',
+                        },
+                    },
+                    dark: {
+                        steppanel: {
+                            background: '#24303F',
+                        },
+                    }
+                }
+
         }
-        // w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary
     },
 })
-// console.log(MyPreset.components)
+console.log(MyPreset.components)
 
 
 app.use(pinia)

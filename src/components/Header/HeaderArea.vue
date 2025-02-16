@@ -99,7 +99,9 @@ const handleFederationSelection = () => {
         <!-- User Area -->
         <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete'"/>
         <DropdownAdmin v-if="userStore.isOnline && userStore.user.type !== 'athlete'"/>
+        
         <router-link to="login" v-if="!userStore.isOnline">Login</router-link>
+        <router-link to="register" v-if="!userStore.isOnline">Registrarse</router-link>
         <!-- User Area -->
       </div>
     </div>

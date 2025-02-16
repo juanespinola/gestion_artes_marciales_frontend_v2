@@ -18,7 +18,6 @@ export default {
     },
     setup(props) {
         const { update, create, fetchAll } = useData();
-        const collection = 'athlete/profile';
         
         const error = ref(null);
         const router = useRouter();
@@ -53,26 +52,26 @@ export default {
         onMounted(async () => {
             fetchTypesDocuments()
             fetchCountries()
-            fetchCities(obj.value.country_id)
+            fetchCities(props.obj.country_id)
          
         });
 
         const handleCountrySelected = (itemSelected) => {
-            obj.value.country_id = (itemSelected.id)
+            props.obj.country_id = (itemSelected.id)
             fetchCities(itemSelected.id)
         }
 
 
         const handleCitySelected = (itemSelected) => {
-            obj.value.city_id = (itemSelected.id)
+            props.obj.city_id = (itemSelected.id)
         }
 
         const handleGenderSelected = (itemSelected) => {
-            obj.value.gender = (itemSelected.id)
+            props.obj.gender = (itemSelected.id)
         }
 
         const handleTypeDocumentSelected = (itemSelected) => {
-            obj.value.type_document_id = (itemSelected.id)
+            props.obj.type_document_id = (itemSelected.id)
         }
 
     
@@ -101,7 +100,7 @@ export default {
                     <h3 class="font-medium text-black dark:text-white">{{ 'Perfil del Atleta' }}</h3>
                 </div>
                 <div class="p-7">
-                    <form @submit.prevent="saveData">
+                    <!-- <form autocomplete="off"> -->
                         
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">
@@ -120,6 +119,14 @@ export default {
                                     type="text" name="email" id="email"
                                     v-model="obj.email">
                             </div>
+                            <div class="w-full">
+                                <label class="mb-3 block text-sm font-medium text-black dark:text-white"
+                                    for="password">Password</label>
+                                <input
+                                    class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                                    type="password" name="password" id="password"
+                                    v-model="obj.password">
+                            </div>
                         </div>
 
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -137,7 +144,7 @@ export default {
                       
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">
-                                <SelectComponent :data="typesdocuments" :title="'Tipo de Documentos'" :selectedOption="obj.type_document_id"
+                                <SelectComponent :data="typesdocuments" :title="'Tipo de Documento'" :selectedOption="obj.type_document_id"
                                 @obj-selected="handleTypeDocumentSelected" />
                             </div>
                             <div class="w-full">
@@ -150,35 +157,7 @@ export default {
                             </div>
                         </div>
 
-                        <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                            <div class="w-full">
-                                <label class="mb-3 block text-sm font-medium text-black dark:text-white"
-                                    for="phone">Nro de Teléfono</label>
-                                <input
-                                    class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                                    type="text" name="phone" id="phone"
-                                    v-model="obj.phone">
-                            </div>
-                            <div class="w-full">
-                                <SelectComponent :data="countries" :title="'Pais'" :selectedOption="obj.country_id"
-                                @obj-selected="handleCountrySelected" />
-                            </div>
-                            <div class="w-full">
-                                <SelectComponent :data="cities" :title="'Ciudad'" :selectedOption="obj.city_id"
-                                @obj-selected="handleCitySelected" />
-                            </div>
-                        </div>
-
-
-                        <div class="flex justify-end gap-4.5">
-                            <!-- <button
-                                class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                                type="button" @click="$router.go(-1)">Cancelar</button> -->
-                            <button
-                                class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
-                                type="submit"> Guardar </button>
-                        </div>
-                    </form>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>

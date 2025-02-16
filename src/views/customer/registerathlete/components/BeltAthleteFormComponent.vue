@@ -17,24 +17,22 @@ export default {
         CardComponent
     },
     props: {
-        id: {
-            type: String,
-            required: false,
+        obj: {
+            type: Object,
+            required: true,
         },
     },
     setup(props) {
-        const { update, create, fetchAll } = useData();
+        const {  create, fetchAll } = useData();
         const collection = 'athlete/profile';
-        const obj = ref({
-            academy_id: '',
-            belt_id: '',
-        });
         const error = ref(null);
         const router = useRouter();
         const isEditing = computed(() => !!props.id);
         const userStore = useUserStore()
         const academies = ref([])
         const belts = ref([])
+        const federations = ref([])
+        const associations = ref([])
         const beltshistory = ref([])
         const expandedRows = ref({});
 
@@ -43,14 +41,7 @@ export default {
         const isModalBeltHistoryOpen = ref(false)
         const modalBeltHistoryData = ref({});
 
-        // Función para obtener los datos si estamos en edición
-        const fetchProduct = async () => {
-            const response = await fetchAll(collection);
-            if (response.success) {
-                obj.value = response.data
-            }
-        };
-
+        
         const fetchAcademies = async () => {
             const response = await fetchAll('athlete/academies');
             if (response.success) {
@@ -59,56 +50,56 @@ export default {
         };
 
 
-        const fetchBelts = async () => {
-            const response = await create('athlete/belts', { federation_id: 1 });
+        const fetchBelts = async (federation_id) => {
+            const response = await create('athlete/belts', { federation_id });
             if (response.success) {
                 belts.value = response.data
             }
         };
 
-
-        // Función para guardar los datos (crear o actualizar)
-        const saveData = async () => {
-            try {
-                if (isEditing.value) {
-                    await update(collection, props.id, obj.value);
-                    console.log('Producto actualizado:', obj.value);
-                } else {
-                    await create(collection, obj.value);
-                    console.log('Producto creado:', obj.value);
-                }
-                router.push({ name: "Profile" }); // Redirige a la lista después de guardar
-            } catch (err) {
-                console.error('Error al guardar el registro:', err.message);
+        const fetchFederations = async () => {
+            const response = await fetchAll('athlete/federations');
+            if (response.success) {
+                federations.value = response.data
             }
         };
 
-        // Función de validación
-        const validateForm = () => {
-            const { description } = obj.value;
-            if (!description) {
-                error.value = "La descripción es obligatoria.";
-                return false;
+        const fetchAssociations = async (federation_id) => {
+            const response = await fetchAll(`athlete/associations/${federation_id}`);
+            if (response.success) {
+                associations.value = response.data
             }
-            return true;
         };
+
+
+    
+
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
         onMounted(async () => {
             fetchAcademies()
-            fetchBelts()
+            fetchFederations()
+            // fetchBelts()
         });
 
         watch(() => props.id, (newId) => {
          
         });
 
+        const handleFederationSelected = (itemSelected) => {
+            props.obj.federation_id = (itemSelected.id)
+            fetchAssociations(itemSelected.id)
+            fetchBelts(itemSelected.id)
+        }
+        const handleAssociationSelected = (itemSelected) => {
+            props.obj.association_id = (itemSelected.id)
+        }
         const handleAcademySelected = (itemSelected) => {
-            obj.value.academy_id = (itemSelected.id)
+            props.obj.academy_id = (itemSelected.id)
         }
 
         const handleBeltSelected = (itemSelected) => {
-            obj.value.belt_id = (itemSelected.id)
+            props.obj.belt_id = (itemSelected.id)
         }
 
         const newBeltHistory = () => {
@@ -122,16 +113,17 @@ export default {
 
 
         return {
-            obj,
             isEditing,
-            saveData,
             error,
-            validateForm,
             academies,
             belts,
+            federations,
+            associations,
             beltshistory,
             handleAcademySelected,
             handleBeltSelected,
+            handleFederationSelected,
+            handleAssociationSelected,
             expandedRows,
             isModalBeltHistoryOpen,
             modalBeltHistoryData,
@@ -154,10 +146,21 @@ export default {
                     <form @submit.prevent="saveData">
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">
+                                <SelectComponent :data="federations" :title="'Federaciones'" :selectedOption="obj.federation_id"
+                                    @obj-selected="handleFederationSelected" />
+                            </div>
+                        </div>
+                        <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                            <div class="w-full">
+                                <SelectComponent :data="associations" :title="'Asociaciones'" :selectedOption="obj.association_id"
+                                    @obj-selected="handleAssociationSelected" />
+                            </div>
+                        </div>
+                        <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                            <div class="w-full">
                                 <SelectComponent :data="academies" :title="'Academia'" :selectedOption="obj.academy_id"
                                     @obj-selected="handleAcademySelected" />
                             </div>
-
                         </div>
 
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -168,14 +171,12 @@ export default {
 
                         </div>
 
-                        <div class="flex justify-end gap-4.5">
-                            <!-- <button
-                                class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                                type="button" @click="$router.go(-1)">Cancelar</button> -->
+                        <!-- <div class="flex justify-end gap-4.5">
+                          
                             <button
                                 class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                                 type="submit"> Guardar </button>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </div>

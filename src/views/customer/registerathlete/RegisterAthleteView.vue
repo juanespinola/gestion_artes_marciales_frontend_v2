@@ -12,6 +12,9 @@ import ContactAthleteFormComponent from './components/ContactAthleteFormComponen
 import BeltAthleteFormComponent from './components/BeltAthleteFormComponent.vue';
 
 import { ref, computed, onMounted, watch } from 'vue'
+import useData from '@/composables/useData';
+import { useRouter } from 'vue-router'
+
 export default {
     components: {
         Stepper,
@@ -27,6 +30,9 @@ export default {
         BeltAthleteFormComponent,
     },
     setup(){
+        const router = useRouter()
+        const { update, create, fetchAll } = useData();
+        const collection = 'athlete/register'
         const obj = ref({
             name: '',
             email: '',
@@ -40,10 +46,39 @@ export default {
             academy_id: '',
             belt_id: '',
             phone: '',
+            federation_id: '',
+            association_id: '',
         })
+        
+
+        // watch([
+        //     () => obj.value.name, 
+        //     () => obj.value.email
+        // ], 
+        // () => {
+        //     // if (obj.value.payment_gateway === 'transferencia') {
+        //     //     obj.value.json_request = {
+        //     //         numero_comprobante: obj.value.payment_number,
+        //     //         motivo: obj.value.reason
+        //     //     }
+        //     // }
+        // })
+
+
+        const saveData = async () => {
+            try {
+                const response = await create(collection, obj.value);
+                if(response.success){
+                    router.push({ name: "Login" }); // Redirige a la lista después de guardar
+                }
+            } catch (err) {
+                console.error('Error al guardar el registro:', err.message);
+            }
+        };
 
         return {
-            obj
+            obj,
+            saveData
         }
     }
 }
@@ -56,7 +91,7 @@ export default {
                 <CardComponent>
                     <div v-if="isLoading">Loading...</div>
                     <div v-if="error">Error: {{ error }}</div>
-                    {{ obj }}
+                    
                     <div
                         class="w-full px-4 sm:px-12.5 flex items-center justify-center border-stroke dark:border-strokedark xl:border-l-2">
                         <div class="w-full py-17.5">
@@ -66,31 +101,32 @@ export default {
                                     <Step value="2">Contacto y Residencia</Step>
                                     <Step value="3">Federación y Cinturón</Step>
                                 </StepList>
-                                <StepPanels>
+                                <StepPanels >
                                     <StepPanel v-slot="{ activateCallback }" value="1">
                                         <ProfileAthleteFormComponent :obj="obj"/>
 
                                         <div class="flex pt-6 justify-end">
-                                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                            <Button label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
                                                 @click="activateCallback('2')" />
                                         </div>
                                     </StepPanel>
                                     <StepPanel v-slot="{ activateCallback }" value="2">
 
-                                        <ContactAthleteFormComponent />
+                                        <ContactAthleteFormComponent :obj="obj"/>
                                         <div class="flex pt-6 justify-between">
-                                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left"
+                                            <Button label="Atras" severity="secondary" icon="pi pi-arrow-left"
                                                 @click="activateCallback('1')" />
-                                            <Button label="Next" icon="pi pi-arrow-right" iconPos="right"
+                                            <Button label="Siguiente" icon="pi pi-arrow-right" iconPos="right"
                                                 @click="activateCallback('3')" />
                                         </div>
                                     </StepPanel>
                                     <StepPanel v-slot="{ activateCallback }" value="3">
-                                        <BeltAthleteFormComponent />
+                                        <BeltAthleteFormComponent :obj="obj" />
                                         <div class="flex pt-6 justify-between">
-                                            <Button label="Back" severity="secondary" icon="pi pi-arrow-left"
+                                            <Button label="Atras" severity="secondary" icon="pi pi-arrow-left"
                                                 @click="activateCallback('2')" />
-                                            <div></div>
+                                            <Button label="Finalizar" iconPos="right" icon="pi pi-arrow-right"
+                                                @click="saveData()" />
                                         </div>
                                     </StepPanel>
                                 </StepPanels>
