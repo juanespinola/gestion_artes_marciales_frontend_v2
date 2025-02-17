@@ -4,6 +4,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -16,6 +17,7 @@ export default {
         },
     },
     setup() {
+        const notificationStore = useNotificationStore()
         const collection = 'entrycategories';   
         const newDataRoute = 'NewAthlete';
         const editDataRoute = 'EditAthlete';
@@ -47,6 +49,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

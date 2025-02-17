@@ -9,8 +9,6 @@ const route = useRoute()
 const router = useRouter()
 
 onMounted(() => {
-    console.log(route.path)    
-    console.log(userStore.federation)    
     if(!Object.keys(userStore.federation).length == 0 && route.path == '/'){
         router.push({ name: 'FederationCards'})
     }

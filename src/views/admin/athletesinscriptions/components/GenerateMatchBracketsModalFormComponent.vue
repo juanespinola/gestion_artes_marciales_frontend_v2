@@ -5,6 +5,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { onClickOutside } from '@vueuse/core'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -27,6 +28,7 @@ export default {
     },
     emits: ['close'], // Define el evento para cerrar el modal
     setup(props, { emit }) {
+        const notificationStore = useNotificationStore()
         const isEditing = computed(() => !!props.data.id);
         const obj = ref({
             athlete: [],
@@ -63,6 +65,12 @@ export default {
                     if (response.success) {
                         console.log('Producto actualizado:', obj.value);
                         emit('close')
+                    }
+                    if(!response.success){
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!",response?.message[key][0])
+                        });
+                        return;
                     }
                 }
             } catch (err) {

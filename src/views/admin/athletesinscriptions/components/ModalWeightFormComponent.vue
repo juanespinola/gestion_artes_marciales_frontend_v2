@@ -2,6 +2,8 @@
 import useData from '@/composables/useData'
 import { ref, onMounted, computed, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
+import { useNotificationStore } from '@/stores/notification';
+
 
 export default {
     props: {
@@ -19,6 +21,7 @@ export default {
     },
     emits: ['close'], // Define el evento para cerrar el modal
     setup(props, {emit}) {
+        const notificationStore = useNotificationStore()
         const isEditing = computed(() => !!props.data.id);
         const obj = ref({
             event_weight: ''
@@ -40,8 +43,14 @@ export default {
                 if (isEditing.value) {
                     const response = await update(collection, props.data.id, obj.value);
                     if (response.success) {
-                        console.log('Producto actualizado:', obj.value);
+                        notificationStore.success("Correcto!",response?.data?.messages)
                         emit('close')
+                    }
+                    if(!response.success){
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!",response?.message[key][0])
+                        });
+                        return;
                     }
                 }
             } catch (err) {

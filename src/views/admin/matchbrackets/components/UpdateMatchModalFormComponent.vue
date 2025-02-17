@@ -3,6 +3,7 @@ import useData from '@/composables/useData'
 import { ref, onMounted, computed, watch } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -23,6 +24,7 @@ export default {
     },
     emits: ['close'], // Define el evento para cerrar el modal
     setup(props, { emit }) {
+        const notificationStore = useNotificationStore()
         const isEditing = computed(() => !!props.data.id);
         const obj = ref({
             match_bracket_id: "",
@@ -66,7 +68,7 @@ export default {
                 if (isEditing.value) {
                     const response = await create(collection, obj.value);
                     if (response.success) {
-                        console.log('Producto actualizado:', obj.value);
+                        notificationStore.success("Correcto!", response?.data?.messages)
                         emit('close')
                     }
                 }

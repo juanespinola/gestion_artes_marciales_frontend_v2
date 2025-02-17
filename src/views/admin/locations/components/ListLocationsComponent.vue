@@ -10,11 +10,13 @@ import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
 import { FilterMatchMode } from '@primevue/core/api';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 
 export default {
     components: { CardComponent, DataTable, Column, GroupActionButtonsComponent, IconField, InputIcon, InputText, FilterMatchMode },
     setup() {
+        const notificationStore = useNotificationStore()
         const collection = 'location';
         const newDataRoute = 'NewLocation';
         const editDataRoute = 'EditLocation';
@@ -50,6 +52,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

@@ -6,6 +6,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
 import CardComponent from '@/components/Card/CardComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -21,6 +22,7 @@ export default {
         },
     },
     setup(props) {
+        const  notificationStore   = useNotificationStore()
         const collection = 'entrycategories';
         const newDataRoute = 'NewEntryCategory';
         const editDataRoute = 'EditEntryCategory';
@@ -52,6 +54,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 
@@ -73,6 +76,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

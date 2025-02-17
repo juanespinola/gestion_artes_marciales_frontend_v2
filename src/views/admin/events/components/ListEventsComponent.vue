@@ -10,11 +10,13 @@ import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
 import { FilterMatchMode } from '@primevue/core/api';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 
 export default {
     components: { CardComponent, DataTable, Column, GroupActionButtonsComponent, IconField, InputIcon, InputText, FilterMatchMode },
     setup() {
+        const notificationStore = useNotificationStore()
         const collection = 'event';
         const newDataRoute = 'NewEvent';
         const editDataRoute = 'EditEvent';
@@ -50,6 +52,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 
@@ -84,12 +87,12 @@ export default {
 
 <template>
     <CardComponent>
-        <DataTable v-model:filters="filters" :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10" dataKey="id"
+        <DataTable v-model:filters="filters" :value="data" tableStyle="min-width: 50rem" :paginator="true" :rows="10"
+            dataKey="id"
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             :rowsPerPageOptions="[5, 10, 25]"
             currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} Datos"
-            v-model:expandedRows="expandedRows"
-            :globalFilterFields="['description']">
+            v-model:expandedRows="expandedRows" :globalFilterFields="['description']">
             <template #header>
                 <div class="flex justify-between">
                     <IconField>

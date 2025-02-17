@@ -1,17 +1,15 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
-import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
-import useNotification from '@/composables/useNotification';
+import { useNotificationStore } from '@/stores/notification';
 
 
 export default {
-    components: { AdminLayout, CardComponent, BasicTableComponent },
+    components: {  BasicTableComponent },
     setup() {
-        const { notification } = useNotification()
+        const notificationStore = useNotificationStore()
         const collection = 'new';
         const newDataRoute = 'NewNew';
         const editDataRoute = 'EditNew';
@@ -42,7 +40,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
-                notification(response?.data.messages)
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

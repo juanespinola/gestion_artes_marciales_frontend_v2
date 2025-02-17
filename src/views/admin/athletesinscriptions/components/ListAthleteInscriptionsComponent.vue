@@ -7,8 +7,9 @@ import Column from 'primevue/column';
 import GroupActionButtonsComponent from './GroupActionButtonsComponent.vue'
 import ModalWeightFormComponent from './ModalWeightFormComponent.vue';
 import GenerateMatchBracketsModalFormComponent from './GenerateMatchBracketsModalFormComponent.vue';
-import useNotification from '@/composables/useNotification';
+
 import CardComponent from '@/components/Card/CardComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -33,7 +34,7 @@ export default {
         const columns = [];
         const data = ref([]);
         const { isLoading, error, create, destroy } = useData();
-        const { notification } = useNotification()
+        const notificationStore = useNotificationStore()
         const expandedRows = ref({});
 
         const isModalOpen = ref(false)
@@ -65,6 +66,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
+                notificationStore.success("Correcto!",response?.data?.messages)
             }
         };
 
@@ -81,6 +83,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
+                notificationStore.success("Correcto!",response?.data?.messages)
             }
         };
 

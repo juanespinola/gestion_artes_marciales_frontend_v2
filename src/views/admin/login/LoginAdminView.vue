@@ -1,23 +1,22 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
+
 import CardComponent from '@/components/Card/CardComponent.vue';
 import { useUserStore } from '@/stores/user';
 import { onMounted, ref } from 'vue'
 import useData from '@/composables/useData'
 import { useRouter } from 'vue-router'
-import useNotification from '@/composables/useNotification';
+import { useNotificationStore } from '@/stores/notification';
 
 
 export default {
     components: {
-        AdminLayout,
         CardComponent
     },
     setup() {
+        const notificationStore = useNotificationStore()
         const userStore = useUserStore()
         const router = useRouter()
         const { create, isLoading, error } = useData();
-        const { notification } = useNotification();
         const obj = ref({
             email: "",
             password: "",
@@ -28,12 +27,21 @@ export default {
         const login = async () =>{
             try {
                 const response = await create('login', obj.value);    
+                if (!response.success) {
+                    Object.keys(response?.message).forEach((key) => {
+                        notificationStore.error("Error!", response?.message[key][0])
+                    });
+                    return;
+                }
+                
                 if(response.success){
                     userStore.isOnline = true
                     userStore.user = response.data.user
                     userStore.token = response.data.token
                     router.push({ name: "homeAdmin"})
                 }
+
+
             } catch (err) {
                 console.error('Error: ', err.message);
             }

@@ -10,10 +10,13 @@ import { definePreset } from '@primevue/themes';
 import App from './App.vue'
 import router from './router'
 
-import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
-import "vue3-toastify/dist/index.css";
+// import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify';
+// import "vue3-toastify/dist/index.css";
+
+import ToastService from 'primevue/toastservice';
 
 const app = createApp(App)
+
 const pinia = createPinia()
 const MyPreset = definePreset(Aura, {
     components: {
@@ -45,9 +48,6 @@ const MyPreset = definePreset(Aura, {
             }
         },
         inputtext: {
-            // root: {
-            //     background: 'dark:bg-meta-4 bg-gray',
-            // }
             colorScheme: {
                 light: {
                     root: {
@@ -92,9 +92,9 @@ const MyPreset = definePreset(Aura, {
         }
     },
 })
-console.log(MyPreset.components)
+// console.log(MyPreset.components)
 
-
+app.use(ToastService);
 app.use(pinia)
 app.use(router)
 app.use(PrimeVue, {
@@ -108,22 +108,17 @@ app.use(PrimeVue, {
             cssLayer: false
         }
     },
-    // css: ({ dt }) => `
-    // .p-datatable.p-datatable-table.p-datatable-thead {
-    //     background: '#24303F'
-    // }
-    // `,
 })
 
-app.use(
-    Vue3Toastify,
-    {
-      autoClose: 2000,
-      style: {
-        opacity: '1',
-        userSelect: 'initial',
-      },
-    } as ToastContainerOptions,
-  );
+// app.use(
+//     Vue3Toastify,
+//     {
+//       autoClose: 5000,
+//       style: {
+//         opacity: '1',
+//         userSelect: 'initial',
+//       },
+//     } as ToastContainerOptions,
+//   );
 
 app.mount('#app')

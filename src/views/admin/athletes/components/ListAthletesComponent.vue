@@ -6,6 +6,7 @@ import { onMounted, ref } from 'vue'
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import GroupActionButtonsComponent from '@/components/BasicTable/GroupActionButtonsComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 
 
@@ -13,6 +14,7 @@ import GroupActionButtonsComponent from '@/components/BasicTable/GroupActionButt
 export default {
     components: { CardComponent, DataTable, Column, GroupActionButtonsComponent },
     setup() {
+        const  notificationStore   = useNotificationStore()
         const collection = 'athlete';
         const newDataRoute = 'NewAthlete';
         const editDataRoute = 'EditAthlete';
@@ -49,6 +51,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

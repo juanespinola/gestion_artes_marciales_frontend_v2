@@ -3,10 +3,12 @@ import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {  BasicTableComponent },
     setup() {
+        const notificationStore = useNotificationStore()
         const collection = 'country';
         const newDataRoute = 'NewCountry';
         const editDataRoute = 'EditCountry';
@@ -37,6 +39,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

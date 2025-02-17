@@ -4,12 +4,9 @@ import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
 import ListCitiesComponent from '../../cities/components/ListCitiesComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 
-/*
-* TODO: nos enfrentamos al problema que en el back end no almacena un nuevo array luego de haber eliminado 
-* los permisos que sacamos al admin
-*/
 export default {
     components: {
         SelectComponent, ListCitiesComponent
@@ -21,6 +18,7 @@ export default {
         },
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'typemembership';
         const obj = ref({
@@ -49,13 +47,27 @@ export default {
         const saveData = async () => {
             try {
                 if (isEditing.value) {
-                    await update(collection, props.id, obj.value);
-                    console.log('Producto actualizado:', obj.value);
+                    const response = await update(collection, props.id, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
+
                 } else {
-                    await create(collection, obj.value);
-                    console.log('Producto creado:', obj.value);
+                    const response = await create(collection, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
                 }
-                router.go(-1); // Redirige a la lista después de guardar
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }

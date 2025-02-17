@@ -8,6 +8,7 @@ import DatePicker from 'primevue/datepicker';
 import SelectComponent from '@/components/Select/SelectComponent.vue';
 import FloatLabel from 'primevue/floatlabel';
 import { useUserStore } from '@/stores/user';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -23,6 +24,7 @@ export default {
         },
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'requestautorization';
         const obj = ref({
@@ -39,25 +41,6 @@ export default {
 
         const userStore = useUserStore()
 
-        // TODO: se debe realizar una funcion en caso que se rechace o apruebe
-        // changeStatus(){
-        //     switch (this.formGroup.value.status) {
-        //         case "aprobado":
-        //             console.log(this.user)
-        //             this.formGroup.patchValue({
-        //                 approved_by: this.user.id,
-        //                 rejected_by: null,
-        //             })
-        //             break;
-        //         case "rechazado":
-        //             console.log('b')
-        //             this.formGroup.patchValue({
-        //                 approved_by: null,
-        //                 rejected_by: this.user.id
-        //             })
-        //             break;
-        //     }
-        // }
 
         const error = ref(null);
         const router = useRouter();
@@ -77,13 +60,27 @@ export default {
         const saveData = async () => {
             try {
                 if (isEditing.value) {
-                    await update(collection, props.id, obj.value);
-                    console.log('Producto actualizado:', obj.value);
+                    const response = await update(collection, props.id, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
+
                 } else {
-                    await create(collection, obj.value);
-                    console.log('Producto creado:', obj.value);
+                    const response = await create(collection, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
                 }
-                router.go(-1); // Redirige a la lista después de guardar
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }

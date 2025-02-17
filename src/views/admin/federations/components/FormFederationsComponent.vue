@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 
 
 /*
@@ -20,6 +21,7 @@ export default {
         },
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'federation';
         const obj = ref({
@@ -55,13 +57,27 @@ export default {
         const saveData = async () => {
             try {
                 if (isEditing.value) {
-                    await update(collection, props.id, obj.value);
-                    console.log('Producto actualizado:', obj.value);
+                    const response = await update(collection, props.id, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
+
                 } else {
-                    await create(collection, obj.value);
-                    console.log('Producto creado:', obj.value);
+                    const response = await create(collection, obj.value);
+                    if (!response.success) {
+                        Object.keys(response?.message).forEach((key) => {
+                            notificationStore.error("Error!", response?.message[key][0])
+                        });
+                        return;
+                    }
+                    notificationStore.success("Correcto!", response?.data?.messages)
+                    router.go(-1); // Redirige a la lista después de guardar
                 }
-                router.go(-1); // Redirige a la lista después de guardar
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }

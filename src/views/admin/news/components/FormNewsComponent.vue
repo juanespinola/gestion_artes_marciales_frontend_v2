@@ -4,7 +4,9 @@ import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
 import Editor from 'primevue/editor'
 import SelectComponent from '@/components/Select/SelectComponent.vue';
-import useNotification from '@/composables/useNotification'
+// import useNotification from '@/composables/useNotification'
+import { useNotificationStore } from '@/stores/notification';
+
 
 export default {
     components: {
@@ -18,7 +20,7 @@ export default {
         },
     },
     setup(props) {
-        const { notification } = useNotification()
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'new';
         const obj = ref({
@@ -45,25 +47,24 @@ export default {
             try {
                 if (isEditing.value) {
                     const response = await update(collection, props.id, obj.value);
-                    console.log(response)
-                    if(!response.success){
+                    if (!response.success) {
                         Object.keys(response?.message).forEach((key) => {
-                            notification(response?.message[key][0], "error");  // Mostrar cada error en un toast
+                            notificationStore.error("Error!", response?.message[key][0])
                         });
                         return;
                     }
-                    notification(response?.data?.messages)
+                    notificationStore.success("Correcto!", response?.data?.messages)
                     router.go(-1); // Redirige a la lista después de guardar
 
                 } else {
                     const response = await create(collection, obj.value);
-                    if(!response.success){
+                    if (!response.success) {
                         Object.keys(response?.message).forEach((key) => {
-                            notification(response?.message[key][0], "error");  // Mostrar cada error en un toast
+                            notificationStore.error("Error!", response?.message[key][0])
                         });
                         return;
                     }
-                    notification(response?.data?.messages)
+                    notificationStore.success("Correcto!", response?.data?.messages)
                     router.go(-1); // Redirige a la lista después de guardar
                 }
             } catch (err) {
@@ -71,23 +72,13 @@ export default {
             }
         };
 
-        // Función de validación
-        const validateForm = () => {
-            const { description } = obj.value;
-            if (!description) {
-                error.value = "La descripción es obligatoria.";
-                return false;
-            }
-            return true;
-        };
-
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
-        onMounted(() => {
-            if (isEditing.value) fetchProduct();
+        onMounted(async () => {
+            if (isEditing.value) await fetchProduct();
         });
 
-        watch(() => props.id, (newId) => {
-            if (newId) fetchProduct();
+        watch(() => props.id, async (newId) => {
+            if (newId) await fetchProduct();
         });
 
         const handleFileChange = async (option, type) => {
@@ -98,8 +89,9 @@ export default {
 
             // TODO: nos da error porque falta el magik plugin instalar en el servidor de PHP
             const response = await create('medianew', formData);
-            if(response.success){
-                console.log('Imagen guardada correctamente')
+            if (response.success) {
+                // console.log('Imagen guardada correctamente')
+                notificationStore.success("Correcto!", "Imagen guardada correctamente")
             }
         }
 
@@ -111,7 +103,7 @@ export default {
             // TODO: necesitamos hacer la accion de eliminar
         }
 
-        return { obj, isEditing, saveData, error, validateForm, handleFileChange, deletePhoto, handleStatusSelected };
+        return { obj, isEditing, saveData, error, handleFileChange, deletePhoto, handleStatusSelected };
     }
 }
 </script>
@@ -125,7 +117,7 @@ export default {
                     <h3 class="font-medium text-black dark:text-white">{{ isEditing ? 'Editar' : 'Nuevo' }}</h3>
                 </div>
                 <div class="p-7">
-                    
+
                     <div v-for="(value, key) in obj" :key="key">
                         <!-- {{ error }} -->
                         <p v-if="error[key]" class="text-red-500">
@@ -153,13 +145,11 @@ export default {
 
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">
-                                <SelectComponent
-                                    :data="[
-                                            { id: 'pendiente', name: 'Pendiente' }, 
-                                            { id: 'activo', name: 'Activo' }, 
-                                            { id: 'inactivo', name: 'Inactivo' }
-                                        ]"
-                                    :title="'Estado'" :selectedOption="obj.status"
+                                <SelectComponent :data="[
+                                    { id: 'pendiente', name: 'Pendiente' },
+                                    { id: 'activo', name: 'Activo' },
+                                    { id: 'inactivo', name: 'Inactivo' }
+                                ]" :title="'Estado'" :selectedOption="obj.status"
                                     @obj-selected="handleStatusSelected" />
                             </div>
                         </div>
@@ -183,7 +173,7 @@ export default {
                     <h3 class="font-medium text-black dark:text-white">Cargar</h3>
                 </div>
                 <div class="p-7">
-                   
+
                     <form @submit.prevent="handlePhotoSubmit">
                         <!-- User Photo Section -->
                         <div class="mb-4 flex items-center gap-3">
@@ -205,7 +195,7 @@ export default {
                             class="relative mb-5.5 block w-full cursor-pointer appearance-none rounded border-2 border-dashed border-primary bg-gray py-4 px-4 dark:bg-meta-4 sm:py-7.5">
                             <input type="file" accept="image/*"
                                 class="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
-                                @change="handleFileChange($event, 'banner_new_detail')" name="file" id="file"/>
+                                @change="handleFileChange($event, 'banner_new_detail')" name="file" id="file" />
                             <div class="flex flex-col items-center justify-center space-y-3">
                                 <span
                                     class="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
@@ -234,7 +224,7 @@ export default {
             </div>
             <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
                 <div class="p-7">
-                    <form >
+                    <form>
                         <!-- User Photo Section -->
                         <div class="mb-4 flex items-center gap-3">
                             <div class="h-14 w-14 rounded-full">

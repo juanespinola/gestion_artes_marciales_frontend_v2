@@ -9,10 +9,12 @@ import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
 import InputText from 'primevue/inputtext';
 import { FilterMatchMode } from '@primevue/core/api';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: { CardComponent, DataTable, Column, IconField, InputIcon, InputText, FilterMatchMode },
     setup() {
+        const notificationStore = useNotificationStore()
         const collection = 'minor_authorization';
         const newDataRoute = 'NewMinorAuthorization';
         const editDataRoute = 'EditMinorAuthorization';
@@ -49,6 +51,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 

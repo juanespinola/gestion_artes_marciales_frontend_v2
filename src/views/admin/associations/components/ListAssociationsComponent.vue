@@ -1,18 +1,18 @@
 <script>
-import AdminLayout from '@/layouts/AdminLayout.vue';
 import CardComponent from '@/components/Card/CardComponent.vue';
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router';
 import { onMounted, ref } from 'vue';
 import BasicTableComponent from '@/components/BasicTable/BasicTableComponent.vue';
-
+import { useNotificationStore } from '@/stores/notification';
 
 /*
 * TODO: Necesitamos que cuando seas admin, puedas seleccionar la asociacion
 */
 export default {
-    components: { AdminLayout, CardComponent, BasicTableComponent },
+    components: {  CardComponent, BasicTableComponent },
     setup() {
+        const  notificationStore   = useNotificationStore()
         const collection = 'association';
         const newDataRoute = 'NewAssociation';
         const editDataRoute = 'EditAssociation';
@@ -43,6 +43,7 @@ export default {
             const response = await destroy(collection, id);
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
+                notificationStore.success(null, response?.data.messages)
             }
         };
 
