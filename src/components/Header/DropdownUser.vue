@@ -34,7 +34,7 @@ const logout = () => {
       </span>
 
       <span class="h-12 w-12 rounded-full">
-        <img src="@/assets/images/user/user-01.png" alt="User" />
+        <img class="rounded-full object-cover object-center" :src="userStore.user.profile_image ? userStore.user.profile_image : 'https://i.pinimg.com/550x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'" alt="User" />
       </span>
 
       <svg

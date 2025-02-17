@@ -26,8 +26,8 @@ export default {
             payment_gateway: 'vpos',
             federation_id: userStore.user.federation.id,
             association_id: userStore.user.federation.association.id,
-            membership_id: '',
-            inscription_id: '',
+            membership_id: props.membership_id ? props.membership_id : "",
+            inscription_id: props.inscription_id ? props.inscription_id : "",
             payment_for: '',
             json_request: {},
             total_payment: '',
@@ -86,7 +86,7 @@ export default {
                 if (response.success) {
                     router.push({
                         name: "Payment",
-                        params: { id: obj.value.membership_id ? obj.value.membership_id : obj.value.inscription_id },
+                        params: { id: props.membership_id ? props.membership_id : props.inscription_id },
                         query: { payment_gateway: obj.value.payment_gateway, response_bancard: response.data.data.process_id }
                     })
                 }
@@ -134,7 +134,7 @@ export default {
         </div>
         <div class="p-7">
             <form @submit.prevent="payment">
-
+                {{ obj }}
                 <div class="mb-5.5">
                     <label for="roleSelect" class="mb-4.5 block text-sm font-medium text-black dark:text-white">
                         Seleccione Método de Pago </label>

@@ -47,7 +47,7 @@ export default {
         // Función para obtener los datos si estamos en edición
         const fetchProduct = async () => {
             if (isEditing.value) {
-                obj.value.athlete = props.data.tariff_inscription.inscriptions.filter((athlete) => athlete.valid_weight)
+                obj.value.athlete = props.data.tariff_inscription.inscriptions.filter((athlete) => athlete.valid_weight && (athlete.status == 'pagado') )
                 obj.value.quadrilateral = props.data.tariff_inscription.quadrilateral;
                 obj.value.entry_category_id = props.data.tariff_inscription.entry_category_id;
                 obj.value.event_id = props.data.event_id;

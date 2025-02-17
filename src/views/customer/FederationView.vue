@@ -21,18 +21,18 @@ export default {
                 description: "Eventos",
                 route: "ListAthleteEvents",
             },
+            // {
+            //     id: 3,
+            //     description: "Información",
+            //     route: "federation/news",
+            // },
             {
                 id: 3,
-                description: "Información",
-                route: "federation/news",
-            },
-            {
-                id: 4,
                 description: "Atletas",
                 route: "ListAthlete",
             },
             {
-                id: 5,
+                id: 4,
                 description: "Ranking",
                 route: "Ranking",
             },

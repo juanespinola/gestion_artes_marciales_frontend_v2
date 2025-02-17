@@ -35,6 +35,7 @@ export default {
         };
 
         const editData = (data) => {
+            console.log(data)
             router.push({ name: CheckOutDataRoute, params: { inscription_id: data.id } });
         };
 

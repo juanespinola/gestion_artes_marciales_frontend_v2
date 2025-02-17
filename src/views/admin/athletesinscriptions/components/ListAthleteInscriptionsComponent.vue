@@ -221,7 +221,7 @@ export default {
                     <Column header="Acciones" headerStyle="text-align: center"
                         bodyStyle="text-align: center; overflow: visible; ">
                         <template #body="{ data }">
-                                <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="true"
+                                <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="data.status == 'pagado'"
                                     :weightValid="data.valid_weight"/>
                             
                         </template>

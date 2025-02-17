@@ -109,7 +109,10 @@ export default {
             </div>
         </button>
         <button>
-            <div class="icon-container bg-red-600 p-2 rounded-full">
+            <div class="icon-container p-2 rounded-full"  :class="{
+                    'bg-meta-3 opacity-100': $props.isPayment,
+                    'bg-red-600': !$props.isPayment
+                }">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2v20" />

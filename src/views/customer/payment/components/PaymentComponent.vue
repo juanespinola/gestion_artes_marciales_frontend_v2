@@ -16,12 +16,19 @@ export default {
             console.log(route)
         })
 
-        return {}
+        return {
+            route
+        }
     }
 
 }
 </script>
 
 <template>
-    aca tenemos que armar el iframe de barcard
+    <div v-if="route.query.payment_gateway == 'vpos'">
+        aca tenemos que armar el iframe de barcard
+    </div>
+    <div v-if="route.query.payment_gateway == 'transferencia'">
+        aca va el componente de transferencia
+    </div>
 </template>
