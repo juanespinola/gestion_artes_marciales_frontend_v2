@@ -49,14 +49,15 @@ export default {
                             <div class="flex items-center justify-between p-4.5 hover:bg-[#F9FAFB] dark:hover:bg-meta-4"
                                 v-for="item_athlete of category.athletes">
                                 <div class="flex items-center">
-                                    <div class="mr-4 h-[50px] overflow-hidden rounded-full w-full max-w-10 h-13">
+                                    <div class="mr-4 h-[50px] overflow-hidden rounded-full w-full ">
                                         <img :src="item_athlete?.athlete?.profile_image ? item_athlete?.athlete?.profile_image : 'https://i.pinimg.com/550x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'"
-                                            alt="user" class="rounded-full object-cover object-center">
+                                            alt="user" class="max-w-10 h-10 rounded-full object-cover object-center">
                                     </div>
                                     <div class="text-start">
                                         <h5 class="font-sm text-black dark:text-white">{{ item_athlete?.athlete?.name }}
                                         </h5>
-                                        <span class="text-sm">Pais</span>
+                                        <!-- <span class="text-sm">{{ item_athlete?.athlete }}</span> -->
+                                        <span class="text-sm">Falta cambiar la consulta sql para traer el pais</span>
                                     </div>
                                 </div>
 
@@ -73,6 +74,9 @@ export default {
                                         <span class="text-sm font-bold">{{ item_athlete.total_defeats }}</span>
                                         <span class="text-xs ">Perdidas</span>
                                     </div>
+                                </div>
+
+                                <div class="flex items-center flex-grow justify-end">
                                     <div class="h-12 w-12 flex flex-col items-center">
                                         <span class="text-sm font-bold">{{ item_athlete.gold_medals }}</span>
                                         <img src="@/assets/images/athletes/medals/gold-medal.svg" alt="medal"
@@ -89,10 +93,8 @@ export default {
                                             class="h-6 w-6 object-cover">
                                     </div>
                                 </div>
+
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>

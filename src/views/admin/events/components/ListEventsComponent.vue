@@ -42,6 +42,13 @@ export default {
             }
         };
 
+        const updateRanking = async () => {
+            const response = await fetchAll('ranking/update');
+            if (response.success) {
+                notificationStore.success(null, response?.data.messages)
+            }
+        };
+
         const newData = () => {
             router.push({ name: newDataRoute });
         };
@@ -97,7 +104,8 @@ export default {
             editData,
             deleteData,
             expandedRows,
-            handleSanctionsData
+            handleSanctionsData,
+            updateRanking
         };
     },
 };
@@ -131,6 +139,11 @@ export default {
             </Column>
             <Column v-for="col of columns" :key="col.field" :field="col.field" :header="col.header" style="width: 30%">
             </Column>
+            <Column header="Actualizar Ranking">
+                <template #body="{ data }">
+                    <button @click="updateRanking" class="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-90" v-if="data?.status_event?.description.toLowerCase() == 'finalizado' && data?.type_event.description.toLowerCase() == 'torneo'">Actualizar</button>
+                </template>
+            </Column>
             <Column header="Acciones" headerStyle="width: 40%; text-align: center"
                 bodyStyle="text-align: center; overflow: visible">
                 <template #body="slotProps">
@@ -138,20 +151,6 @@ export default {
                         @deleteData="deleteData(slotProps.data.id)" />
                 </template>
             </Column>
-            <!-- <template #expansion="slotProps">
-                <div class="p-4">
-                    <h5>Sanciones</h5>
-                    <DataTable :value="slotProps.data.roles">
-                        <Column header="#" headerStyle="width:3rem">
-                            <template #body="slotProps">
-                                {{ slotProps.index + 1 }}
-                            </template>
-                        </Column>
-                        <Column field="name" header="Roles"></Column>
-                    </DataTable>
-                </div>
-            </template> -->
-
         </DataTable>
     </CardComponent>
 </template>

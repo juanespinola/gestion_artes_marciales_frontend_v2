@@ -212,7 +212,7 @@ export default {
                     </div>
                     <div class="w-full">
                         <SelectComponent :data="statusevent" :title="'Estado de Evento'"
-                            :selectedOption="obj.status_event_id" @obj-selected="handleEventTypeSelected" />
+                            :selectedOption="obj.status_event_id" @obj-selected="handleEventStatusSelected" />
                     </div>
                 </div>
 
