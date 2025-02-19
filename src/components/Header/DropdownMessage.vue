@@ -48,7 +48,7 @@ const handleSelectOption = (route) => {
 </script>
 
 <template>
-  <li class="relative" ref="target" v-if="route.path !== '/federation'">
+  <li class="relative" ref="target">
     <router-link
       class="relative flex h-8.5 w-8.5 items-center justify-center rounded-full border-[0.5px] border-stroke bg-gray hover:text-primary dark:border-strokedark dark:bg-meta-4 dark:text-white"
       to="#" @click.prevent="(dropdownOpen = !dropdownOpen), (notifying = false)">

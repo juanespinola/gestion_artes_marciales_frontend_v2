@@ -94,7 +94,7 @@ const MyPreset = definePreset(Aura, {
 })
 // console.log(MyPreset.components)
 
-app.use(ToastService);
+
 app.use(pinia)
 app.use(router)
 app.use(PrimeVue, {
@@ -109,6 +109,7 @@ app.use(PrimeVue, {
         }
     },
 })
+app.use(ToastService);
 
 // app.use(
 //     Vue3Toastify,

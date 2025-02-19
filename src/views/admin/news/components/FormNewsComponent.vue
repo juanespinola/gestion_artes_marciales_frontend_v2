@@ -59,11 +59,27 @@ export default {
                 } else {
                     const response = await create(collection, obj.value);
                     if (!response.success) {
-                        Object.keys(response?.message).forEach((key) => {
-                            notificationStore.error("Error!", response?.message[key][0])
-                        });
+                        //     Object.keys(response?.message).forEach((key) => {
+                        //         notificationStore.error("Error!", response?.message[key][0])
+                        //     });
+                        //     return;
+
+                        if (typeof response?.message === "string") {
+                            notificationStore.error("Error!", response?.message);
+                        } else if (typeof response?.message === "object" && response?.message !== null) {
+                            Object.values(response?.message).forEach((errors) => {
+                                if (Array.isArray(errors)) {
+                                    errors.forEach((error) => notificationStore.error("Error!", error));
+                                } else {
+                                    notificationStore.error("Error!", errors);
+                                }
+                            });
+                        } else {
+                            notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                        }
                         return;
                     }
+
                     notificationStore.success("Correcto!", response?.data?.messages)
                     router.go(-1); // Redirige a la lista después de guardar
                 }
@@ -118,12 +134,7 @@ export default {
                 </div>
                 <div class="p-7">
 
-                    <div v-for="(value, key) in obj" :key="key">
-                        <!-- {{ error }} -->
-                        <p v-if="error[key]" class="text-red-500">
-                            {{ error[key][0] }}
-                        </p>
-                    </div>
+
                     <form @submit.prevent="saveData">
                         <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                             <div class="w-full">

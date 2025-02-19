@@ -12,7 +12,7 @@ export default {
         const EventDetailDataRoute = 'EventsAthleteDetail';
         const router = useRouter();
         const data = ref([]);
-        const { isLoading, error, fetchAll, destroy } = useData();
+        const { isLoading, error, fetchAll } = useData();
 
         const fetchData = async () => {
             const response = await fetchAll(collection);

@@ -22,6 +22,7 @@ export default {
         },
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'association';
         const obj = ref({

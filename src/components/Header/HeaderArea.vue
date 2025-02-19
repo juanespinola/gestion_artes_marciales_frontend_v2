@@ -5,19 +5,23 @@ import DropdownMessage from './DropdownMessage.vue'
 import DropdownNotification from './DropdownNotification.vue'
 import DropdownUser from './DropdownUser.vue'
 import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import DropdownAdmin from './DropdownAdmin.vue'
 
 const { toggleSidebar } = useSidebarStore()
 const sidebarStore = useSidebarStore()
 const userStore = useUserStore()
 const router = useRouter()
+const route = useRoute()
 
 
 const handleFederationSelection = () => {
   userStore.selectFederation()
   router.push({ name: "home"})
 }
+
+const isPageFederations = route.path == '/'
+
 </script>
 
 <template>
@@ -80,28 +84,22 @@ const handleFederationSelection = () => {
       <div class="flex items-center gap-3 2xsm:gap-7">
         <ul class="flex items-center gap-2 2xsm:gap-4">
           <li>
-            <!-- Dark Mode Toggler -->
             <DarkModeSwitcher />
-            <!-- Dark Mode Toggler -->
-               
           </li>
           <li>
-            <DropdownMessage />
+            <DropdownMessage v-if="!isPageFederations"/>
           </li>
           <li>
-            <button v-if="!userStore.isOnline" @click="handleFederationSelection">Federaciones</button>
+            <button v-if="!userStore.isOnline && !isPageFederations" @click="handleFederationSelection">Federaciones</button>
           </li>
-          <!-- Notification Menu Area -->
-          <!-- <DropdownNotification /> -->
-          <!-- Notification Menu Area -->
         </ul>
 
         <!-- User Area -->
-        <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete'"/>
-        <DropdownAdmin v-if="userStore.isOnline && userStore.user.type !== 'athlete'"/>
+        <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete' && !isPageFederations"/>
+        <DropdownAdmin v-if="userStore.isOnline && userStore.user.type !== 'athlete' && !isPageFederations"/>
         
-        <router-link to="login" v-if="!userStore.isOnline">Login</router-link>
-        <router-link to="register" v-if="!userStore.isOnline">Registrarse</router-link>
+        <router-link to="login" v-if="!userStore.isOnline && !isPageFederations">Login</router-link>
+        <router-link to="register" v-if="!userStore.isOnline && !isPageFederations">Registrarse</router-link>
         <!-- User Area -->
       </div>
     </div>

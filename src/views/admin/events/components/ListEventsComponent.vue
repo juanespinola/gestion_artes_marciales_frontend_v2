@@ -25,6 +25,8 @@ export default {
             { field: 'description', header: 'Descripción' },
             { field: 'initial_date', header: 'Fecha Inicial' },
             { field: 'final_date', header: 'Fecha Final' },
+            { field: 'type_event.description', header: 'Tipo de Evento' },
+            { field: 'status_event.description', header: 'Estado' },
         ];
         const data = ref([]);
         const { isLoading, error, fetchAll, destroy } = useData();
@@ -50,6 +52,22 @@ export default {
 
         const deleteData = async (id) => {
             const response = await destroy(collection, id);
+            if (!response.success) {
+                if (typeof response?.message === "string") {
+                    notificationStore.error("Error!", response?.message);
+                } else if (typeof response?.message === "object" && response?.message !== null) {
+                    Object.values(response?.message).forEach((errors) => {
+                        if (Array.isArray(errors)) {
+                            errors.forEach((error) => notificationStore.error("Error!", error));
+                        } else {
+                            notificationStore.error("Error!", errors);
+                        }
+                    });
+                } else {
+                    notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                }
+                return;
+            }
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
                 notificationStore.success(null, response?.data.messages)

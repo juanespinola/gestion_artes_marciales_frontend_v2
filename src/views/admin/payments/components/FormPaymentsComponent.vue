@@ -43,7 +43,6 @@ export default {
         };
 
         const saveData = async () => {
-            // if (!validateForm()) return; // Detén el proceso si la validación falla
             try {
                 if (isEditing.value) {
                     const response = await update(`${collection}`, props.id, {});
@@ -64,15 +63,15 @@ export default {
         };
 
 
-        onMounted(() => {
+        onMounted(async () => {
             // if (isEditing.value) {
             //     fetchProduct();
             // }
-            if (isEditing.value) fetchProduct();
+            if (isEditing.value) await fetchProduct();
         });
 
-        watch(() => props.id, (newId) => {
-            if (newId) fetchProduct();
+        watch(() => props.id, async (newId) => {
+            if (newId) await fetchProduct();
         });
 
         return { obj, isEditing, saveData, error };

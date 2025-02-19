@@ -30,6 +30,7 @@ export default {
 
         onMounted(async () => {
             await fetchData(); // Cargar los datos al montar el componente
+            
         });
 
         
@@ -48,7 +49,7 @@ export default {
             router,
             fetchData,
             handleAthleteInscription,
-            
+            userStore,
         };
     }
 }
@@ -56,15 +57,19 @@ export default {
 
 <template>
     <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 class="text-title-md2 font-semibold text-black dark:text-white">{{ data.description }}</h2>
+        <h2 class="text-title-md2 font-semibold text-black dark:text-white">{{ data.description }} </h2>
         <button
+            v-if="userStore?.user.type == 'athlete' && !(data.available_slots == data.total_participants) && data?.status_event?.description.toLowerCase() == 'en curso'"
             @click="handleAthleteInscription"
             class="inline-flex items-center justify-center gap-2.5 py-2 px-3 text-center font-medium hover:bg-opacity-90 bg-primary text-white">
             Inscripcion
         </button>
+        <label v-if="userStore?.user.type == 'athlete' && (data.available_slots == data.total_participants) && data?.status_event?.description.toLowerCase() == 'en curso'">
+            Cupos Llenos
+        </label>
     </div>
 
-    <div class="">
+    <div>
 
         <!-- <div
         class="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">-->

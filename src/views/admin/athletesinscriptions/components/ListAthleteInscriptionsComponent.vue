@@ -64,6 +64,22 @@ export default {
 
         const deleteEntryCategoryData = async (id) => {
             const response = await destroy(collection, id);
+            if (!response.success) {
+                if (typeof response?.message === "string") {
+                    notificationStore.error("Error!", response?.message);
+                } else if (typeof response?.message === "object" && response?.message !== null) {
+                    Object.values(response?.message).forEach((errors) => {
+                        if (Array.isArray(errors)) {
+                            errors.forEach((error) => notificationStore.error("Error!", error));
+                        } else {
+                            notificationStore.error("Error!", errors);
+                        }
+                    });
+                } else {
+                    notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                }
+                return;
+            }
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
                 notificationStore.success("Correcto!",response?.data?.messages)
@@ -81,6 +97,22 @@ export default {
 
         const deleteCategoryData = async (id) => {
             const response = await destroy(collection, id);
+            if (!response.success) {
+                if (typeof response?.message === "string") {
+                    notificationStore.error("Error!", response?.message);
+                } else if (typeof response?.message === "object" && response?.message !== null) {
+                    Object.values(response?.message).forEach((errors) => {
+                        if (Array.isArray(errors)) {
+                            errors.forEach((error) => notificationStore.error("Error!", error));
+                        } else {
+                            notificationStore.error("Error!", errors);
+                        }
+                    });
+                } else {
+                    notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                }
+                return;
+            }
             if (response.success) {
                 await fetchData(props.eventid); // Recargar datos después de eliminar
                 notificationStore.success("Correcto!",response?.data?.messages)
@@ -221,7 +253,9 @@ export default {
                     <Column header="Acciones" headerStyle="text-align: center"
                         bodyStyle="text-align: center; overflow: visible; ">
                         <template #body="{ data }">
-                                <GroupActionButtonsComponent @changeWeightData="changeWeightData(data)" :isPayment="data.status == 'pagado'"
+                                <GroupActionButtonsComponent 
+                                    @changeWeightData="changeWeightData(data)" 
+                                    :isPayment="data.status == 'pagado'"
                                     :weightValid="data.valid_weight"/>
                             
                         </template>

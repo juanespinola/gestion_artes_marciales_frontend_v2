@@ -35,8 +35,11 @@ export default function useData() {
                     return 'Solicitud incorrecta.';
                 case 401:
                     return 'No autorizado.';
+                // case 409:
+                //     return 'No se puede Eliminar porque cuenta con registros ';
                 case 500:
                     return 'Error del servidor.';
+                    
                 default:
                     return 'Ocurrió un error.';
             }

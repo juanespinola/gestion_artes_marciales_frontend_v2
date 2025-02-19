@@ -95,10 +95,21 @@ export default {
             try {
                 if (isEditing.value) {
                     const response = await update(collection, props.eventid, obj.value);
+                    // console.log(response.message)
                     if (!response.success) {
-                        Object.keys(response?.message).forEach((key) => {
-                            notificationStore.error("Error!", response?.message[key][0])
-                        });
+                        if (typeof response?.message === "string") {
+                            notificationStore.error("Error!", response?.message);
+                        } else if (typeof response?.message === "object" && response?.message !== null) {
+                            Object.values(response?.message).forEach((errors) => {
+                                if (Array.isArray(errors)) {
+                                    errors.forEach((error) => notificationStore.error("Error!", error));
+                                } else {
+                                    notificationStore.error("Error!", errors);
+                                }
+                            });
+                        } else {
+                            notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                        }
                         return;
                     }
                     notificationStore.success("Correcto!", response?.data?.messages)

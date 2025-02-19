@@ -10,10 +10,10 @@ import CardComponent from '@/components/Card/CardComponent.vue';
 import ProfileAthleteFormComponent from './components/ProfileAthleteFormComponent.vue';
 import ContactAthleteFormComponent from './components/ContactAthleteFormComponent.vue';
 import BeltAthleteFormComponent from './components/BeltAthleteFormComponent.vue';
-
 import { ref, computed, onMounted, watch } from 'vue'
 import useData from '@/composables/useData';
 import { useRouter } from 'vue-router'
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -30,6 +30,7 @@ export default {
         BeltAthleteFormComponent,
     },
     setup(){
+        const notificationStore = useNotificationStore()
         const router = useRouter()
         const { update, create, fetchAll } = useData();
         const collection = 'athlete/register'
@@ -51,26 +52,19 @@ export default {
         })
         
 
-        // watch([
-        //     () => obj.value.name, 
-        //     () => obj.value.email
-        // ], 
-        // () => {
-        //     // if (obj.value.payment_gateway === 'transferencia') {
-        //     //     obj.value.json_request = {
-        //     //         numero_comprobante: obj.value.payment_number,
-        //     //         motivo: obj.value.reason
-        //     //     }
-        //     // }
-        // })
-
-
         const saveData = async () => {
             try {
                 const response = await create(collection, obj.value);
-                if(response.success){
-                    router.push({ name: "Login" }); // Redirige a la lista después de guardar
+                if(!response.success){
+                        Object.keys(response?.message).forEach((key) => {
+                            console.log(response?.message[key][0])
+                            notificationStore.error("Error!",response?.message[key][0])
+                        });
+                    return;
                 }
+                notificationStore.success("Correcto!",response?.data?.messages)
+                router.push({ name: "Login" }); // Redirige a la lista después de guardar
+               
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }

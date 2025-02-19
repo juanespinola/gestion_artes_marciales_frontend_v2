@@ -7,7 +7,7 @@ import { useNotificationStore } from '@/stores/notification';
 
 
 export default {
-    components: {  BasicTableComponent },
+    components: { BasicTableComponent },
     setup() {
         const notificationStore = useNotificationStore()
         const collection = 'new';
@@ -38,6 +38,22 @@ export default {
 
         const deleteData = async (id) => {
             const response = await destroy(collection, id);
+            if (!response.success) {
+                if (typeof response?.message === "string") {
+                    notificationStore.error("Error!", response?.message);
+                } else if (typeof response?.message === "object" && response?.message !== null) {
+                    Object.values(response?.message).forEach((errors) => {
+                        if (Array.isArray(errors)) {
+                            errors.forEach((error) => notificationStore.error("Error!", error));
+                        } else {
+                            notificationStore.error("Error!", errors);
+                        }
+                    });
+                } else {
+                    notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                }
+                return;
+            }
             if (response.success) {
                 await fetchData(); // Recargar datos después de eliminar
                 notificationStore.success(null, response?.data.messages)
@@ -67,12 +83,6 @@ export default {
 </script>
 
 <template>
-    <BasicTableComponent 
-        :data="data" 
-        :columns="columns"
-        :newData="newData"
-        :editData="editData"
-        :deleteData="deleteData"
-        :isActiveSearchGlobal="true"
-    />
+    <BasicTableComponent :data="data" :columns="columns" :newData="newData" :editData="editData"
+        :deleteData="deleteData" :isActiveSearchGlobal="true" />
 </template>
