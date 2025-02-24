@@ -41,6 +41,7 @@ export default {
 
 
         const selectProduct = (event) => {
+            
             const selectedId = event.target.value;
             selectedOption.value = selectedId; // Actualizar opción seleccionada
             const obj = data.value.find((item) => item.id == selectedId);

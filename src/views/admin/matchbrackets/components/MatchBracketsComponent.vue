@@ -124,11 +124,12 @@ export default {
         </div>
         <div class="flex mr-30">
             <ol class="flex flex-1 flex-col justify-around mr-5 matchbracket h-auto"
-                v-for="(matchbracket, index) of data" :class="{ 'ml-5': index > 0 }" :key="index">
+                v-for="(matchbracket, index) of data" :class="{ 'ml-5': index > 0 }" 
+                :key="index">
                 <div class="border-b border-stroke px-4 py-4 dark:border-strokedark">
                     <h2 class="font-medium text-black dark:text-white"> {{ matchbracket.phase }}</h2>
                 </div>
-                <div class="flex flex-1 flex-col justify-center h-auto justify-around">
+                <div class="flex flex-1 flex-col h-auto justify-around">
                     <li v-for="(match, matchIndex) in matchbracket.matches" :key="matchIndex"
                         class="flex flex-col justify-center m-2 p-1 leading-relaxed bg-gray-600 text-gray-300 relative with-connector"
                         :class="{

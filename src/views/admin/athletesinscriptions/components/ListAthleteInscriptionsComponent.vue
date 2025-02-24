@@ -231,7 +231,7 @@ export default {
 
 
             <template #expansion="{ data, index }">
-                <DataTable :value="data.tariff_inscription.inscriptions" dataKey="index" rowGroupMode="subheader">
+                <DataTable :value="data?.tariff_inscription?.inscriptions" dataKey="index" rowGroupMode="subheader">
                     <Column header="#" headerStyle="width:3rem">
                         <template #body="slotProps">
                             {{ slotProps.index + 1 }}
