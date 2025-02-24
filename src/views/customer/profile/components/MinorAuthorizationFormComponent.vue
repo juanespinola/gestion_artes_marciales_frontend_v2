@@ -1,9 +1,10 @@
 <script>
 
 import { useRouter } from 'vue-router'
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import useData from '@/composables/useData'
 import { useUserStore } from '@/stores/user';
+import { useNotificationStore } from '@/stores/notification';
 
 /*
 * TODO: nos enfrentamos al problema que en el back end no almacena un nuevo array luego de haber eliminado 
@@ -17,6 +18,7 @@ export default {
        
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const userStore = useUserStore()
         const { create, fetchAll } = useData();
         const collection = 'minor_authorization/uploaddocument';
@@ -38,8 +40,28 @@ export default {
         // Función para guardar los datos (crear o actualizar)
         const saveData = async () => {
             try {
-                await create(collection, formData);
+                const response = await create(collection, formData);
+                console.log(response)
+                if (!response.success) {
+                    if (typeof response?.message === "string") {
+                        notificationStore.error("Error!", response?.message);
+                    } else if (typeof response?.message === "object" && response?.message !== null) {
+                        Object.values(response?.message).forEach((errors) => {
+                            if (Array.isArray(errors)) {
+                                errors.forEach((error) => notificationStore.error("Error!", error));
+                            } else {
+                                notificationStore.error("Error!", errors);
+                            }
+                        });
+                    } else {
+                        notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                    }
+                    return;
+                }
+
+                notificationStore.success(null, response?.data.messages)            
                 router.push({ name:"Profile" }); // Redirige a la lista después de guardar
+
             } catch (err) {
                 console.error('Error al guardar el registro:', err.message);
             }

@@ -8,6 +8,7 @@ import DatePicker from 'primevue/datepicker';
 import SelectComponent from '@/components/Select/SelectComponent.vue';
 import FloatLabel from 'primevue/floatlabel';
 import { useUserStore } from '@/stores/user';
+import { useNotificationStore } from '@/stores/notification';
 
 export default {
     components: {
@@ -23,14 +24,13 @@ export default {
         },
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const { find, update, create } = useData();
         const collection = 'minor_authorization';
         const obj = ref({
             route_file: '',
             authorized: '',
         });
-
-        const userStore = useUserStore()
 
         const error = ref(null);
         const router = useRouter();
@@ -75,15 +75,6 @@ export default {
             }
         };
 
-        // Función de validación
-        const validateForm = () => {
-            const { description } = obj.value;
-            if (!description) {
-                error.value = "La descripción es obligatoria.";
-                return false;
-            }
-            return true;
-        };
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
         onMounted(async () => {

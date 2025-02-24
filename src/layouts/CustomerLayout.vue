@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import HeaderArea from '@/components/Header/HeaderArea.vue'
 import SidebarArea from '@/components/Sidebar/SidebarArea.vue'
+import Toast from 'primevue/toast';
 </script>
 
 <template>
@@ -19,6 +20,7 @@ import SidebarArea from '@/components/Sidebar/SidebarArea.vue'
       <!-- ===== Main Content Start ===== -->
       <main>
         <div class="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <Toast/>
           <slot></slot>
         </div>
       </main>

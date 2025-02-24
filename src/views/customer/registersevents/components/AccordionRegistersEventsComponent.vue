@@ -4,12 +4,22 @@ export default {
         title: String,
         content: String,
         isOpen: Boolean,
+        entry_athlete: Array,
     },
+    setup(props){
+        const isAvailableEntryCategory = (entrycategory) => {    
+            return props.entry_athlete.some(entry => entry.id === entrycategory.id);
+        };
+
+        return {
+            isAvailableEntryCategory,
+        };
+    }
 }
 </script>
 
 <template>
-    <div class="rounded-md border border-stroke p-4 shadow-9 dark:border-strokedark dark:shadow-none sm:p-6">
+    <div class="rounded-md border border-stroke p-4 shadow-9 dark:border-strokedark dark:shadow-none sm:p-6" >
         <button @click="$emit('toggle')" class="flex w-full items-center gap-1.5 sm:gap-3 xl:gap-6">
             <div
                 class="flex h-10.5 w-full max-w-10.5 items-center justify-center rounded-md bg-[#F3F5FC] dark:bg-meta-4">
@@ -31,16 +41,16 @@ export default {
             <div>
                 <h5 class="mb-4 text-lg font-medium text-black dark:text-white">Categoría</h5>
                 <div class="flex flex-col gap-2" >
-                    <label :for="`taskCheckbox_${index}`" class="cursor-pointer" v-for="(entrycategory,index) of content" :key="index" >
-                        <div class="relative flex items-center pt-0.5" @click="$emit('selectEntryCategory', entrycategory)">
+                    <div v-for="(entrycategory, index) of content" :key="index" 
+                    :class="{'disabled:cursor-default disabled:bg-whiter dark:focus:border-primary dark:disabled:bg-black opacity-50': !isAvailableEntryCategory(entrycategory) }">
+                        <div class="relative flex items-center pt-0.5" @click="isAvailableEntryCategory(entrycategory) && $emit('selectEntryCategory', entrycategory)" >
                             <input :id="`taskCheckbox_${index}`" type="checkbox" class="taskCheckbox sr-only">
                             <div
-                                class="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark dark:bg-boxdark-2">
-                                <span class="text-white opacity-0"><svg class="fill-current" width="10" height="7"
-                                        viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M9.70685 0.292804C9.89455 0.480344 10 0.734667 10 0.999847C10 1.26503 9.89455 1.51935 9.70685 1.70689L4.70059 6.7072C4.51283 6.89468 4.2582 7 3.9927 7C3.72721 7 3.47258 6.89468 3.28482 6.7072L0.281063 3.70701C0.0986771 3.5184 -0.00224342 3.26578 3.785e-05 3.00357C0.00231912 2.74136 0.10762 2.49053 0.29326 2.30511C0.4789 2.11969 0.730026 2.01451 0.992551 2.01224C1.25508 2.00996 1.50799 2.11076 1.69683 2.29293L3.9927 4.58607L8.29108 0.292804C8.47884 0.105322 8.73347 0 8.99896 0C9.26446 0 9.51908 0.105322 9.70685 0.292804Z"
-                                            fill=""></path>
+                                class="box mr-3 flex h-5 w-5 items-center justify-center dark:bg-boxdark-2">
+                                <span class="text-white">
+                                    <svg class="cursor-pointer fill-gray-700 hover:fill-error-500 dark:fill-gray-400 dark:hover:fill-error-500" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.2502 4.99951C9.2502 4.5853 9.58599 4.24951 10.0002 4.24951C10.4144 4.24951 10.7502 4.5853 10.7502 4.99951V9.24971H15.0006C15.4148 9.24971 15.7506 9.5855 15.7506 9.99971C15.7506 10.4139 15.4148 10.7497 15.0006 10.7497H10.7502V15.0001C10.7502 15.4143 10.4144 15.7501 10.0002 15.7501C9.58599 15.7501 9.2502 15.4143 9.2502 15.0001V10.7497H5C4.58579 10.7497 4.25 10.4139 4.25 9.99971C4.25 9.5855 4.58579 9.24971 5 9.24971H9.2502V4.99951Z" fill="">
+                                        </path>
                                     </svg>
                                 </span>
                             </div>
@@ -50,7 +60,7 @@ export default {
                                 - {{ entrycategory.max_age }} Años |
                                 {{ entrycategory.clothes }} </p>
                         </div>
-                    </label>
+                    </div>
                 </div>
             </div>
         </div>

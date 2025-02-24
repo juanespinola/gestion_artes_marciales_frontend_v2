@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 import AccordionRegistersEventsComponent from './components/AccordionRegistersEventsComponent.vue';
 import InscriptionFormComponent from './components/InscriptionFormComponent.vue';
+import { useNotificationStore } from '@/stores/notification';
 export default {
     components: {
         AccordionRegistersEventsComponent,
@@ -16,12 +17,14 @@ export default {
         }
     },
     setup(props) {
+        const notificationStore = useNotificationStore()
         const indexAccordion = ref()
         const toggleAccordion = (index) => {
             indexAccordion.value = indexAccordion.value === index ? null : index;
         }
         const collection = `athlete/entrycategories`;
         const data = ref({});
+        const entry_categories_available = ref({});
         const { isLoading, error, create } = useData();
         const router = useRouter();
         const selectedEntryCategories = ref([]);
@@ -29,7 +32,8 @@ export default {
         const fetchData = async () => {
             const response = await create(collection, { event_id: props.id });
             if (response.success) {
-                data.value = response.data
+                data.value = response.data.entry_athlete
+                entry_categories_available.value = response.data.entry_category_available
             }
         };
 
@@ -64,16 +68,33 @@ export default {
 
         const handleInscriptionAthlete = async () => {
             const response = await create("athlete/inscription/create", { selectEntryForPayment: selectedEntryCategories.value });
-            if(response.success && response.data.response){
-                router.push({ name: 'TabsPaymentsFee', query: { pageFrom: 'registerevent'} });
-            } else {
-                console.log('estas inscripto en alguna')
+            if (!response.success) {
+                if (typeof response?.message === "string") {
+                    notificationStore.error("Error!", response?.message);
+                } else if (typeof response?.message === "object" && response?.message !== null) {
+                    Object.values(response?.message).forEach((errors) => {
+                        if (Array.isArray(errors)) {
+                            errors.forEach((error) => notificationStore.error("Error!", error));
+                        } else {
+                            notificationStore.error("Error!", errors);
+                        }
+                    });
+                } else {
+                    notificationStore.error("Error!", "Ocurrió un error desconocido.");
+                }
+                return;
             }
+            
+            router.push({ name: 'TabsPaymentsFee', query: { pageFrom: 'registerevent'} });
+            // if(response.success && response.data.response){
+            //     router.push({ name: 'TabsPaymentsFee', query: { pageFrom: 'registerevent'} });
+            // } 
         }
 
 
         return {
             data,
+            entry_categories_available,
             isLoading,
             error,
             router,
@@ -92,9 +113,9 @@ export default {
 <template>
     <div class="grid grid-cols-1 gap-4 md:gap-6 xl:grid-cols-2 xl:gap-7.5">
         <div class="flex flex-col gap-6">
-            <AccordionRegistersEventsComponent v-for="(entrycategory, index) in data" :key="index"
+            <AccordionRegistersEventsComponent v-for="(entrycategory, index) in entry_categories_available" :key="index"
                 :title="entrycategory.belt" :content="entrycategory.categories" :isOpen="indexAccordion === index"
-                @toggle="toggleAccordion(index)" @selectEntryCategory="selectEntryCategory" />
+                @toggle="toggleAccordion(index)" @selectEntryCategory="selectEntryCategory" :entry_athlete="data" />
         </div>
 
         <div class="flex flex-col gap-6">

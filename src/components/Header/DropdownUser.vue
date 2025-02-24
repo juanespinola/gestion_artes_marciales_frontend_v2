@@ -107,7 +107,7 @@ const logout = () => {
             Mis Cuotas y Pagos
           </router-link>
         </li>
-        <li>
+        <!-- <li>
           <router-link
             to="/pages/settings"
             class="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
@@ -131,7 +131,7 @@ const logout = () => {
             </svg>
             Account Settings
           </router-link>
-        </li>
+        </li> -->
       </ul>
       <button
         class="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
