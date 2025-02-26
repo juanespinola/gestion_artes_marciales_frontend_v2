@@ -5,8 +5,8 @@ import { getActivePinia } from 'pinia';
 import useNotification from './useNotification';
 
 export default function useData() {
-    const baseUrl = `https://mart.juanespinola.dev/api/`; //prod
-    // const baseUrl = `http://localhost:8000/api/`; //dev
+    // const baseUrl = `https://mart.juanespinola.dev/api/`; //prod
+    const baseUrl = `http://localhost:8000/api/`; //dev
     const userStore = getActivePinia() ? useUserStore() : null;
     const isLoading = ref(false);
     const error = ref<string | null>(null);

@@ -30,6 +30,7 @@ export default {
         const obj = ref({
             route_file: '',
             authorized: '',
+            athlete: '',
         });
 
         const error = ref(null);
@@ -42,6 +43,7 @@ export default {
             if (response.success) {
                 obj.value.route_file = response.data.route_file;
                 obj.value.authorized = response.data.authorized;
+                obj.value.athlete = response.data.athlete;
             }
         };
 
@@ -91,7 +93,6 @@ export default {
             isEditing, 
             saveData, 
             error, 
-            validateForm 
         };
     }
 }

@@ -86,16 +86,7 @@ export default {
             }
         };
 
-        // Función de validación
-        const validateForm = () => {
-            const { description } = obj.value;
-            if (!description) {
-                error.value = "La descripción es obligatoria.";
-                return false;
-            }
-            return true;
-        };
-
+      
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
         onMounted(() => {
             if (isEditing.value) fetchProduct();
@@ -120,7 +111,7 @@ export default {
             }
         }
 
-        return { obj, isEditing, saveData, error, validateForm, handleStatusSelected };
+        return { obj, isEditing, saveData, error, handleStatusSelected };
     }
 }
 </script>
@@ -132,7 +123,7 @@ export default {
                 <form @submit.prevent="saveData">
                     <div class="border-b border-stroke py-4 px-7 dark:border-strokedark flex justify-between">
                         <h3 class="font-medium text-black dark:text-white">{{ isEditing && `Solicitud #${obj.id}` }}</h3>
-                        <h3 class="font-medium text-black dark:text-white">{{ obj.approved_by_user ? `Aprobado por ${obj.approved_by_user.name}` : `Rechazado por ${obj?.rejected_by_user?.name}` }}</h3>
+                        <h3 class="font-medium text-black dark:text-white">{{ obj.approved_by_user ? `Aprobado por ${obj?.approved_by_user?.name}` : obj?.rejected_by_user ? `Rechazado por ${obj?.rejected_by_user?.name}` : `Solicitud Pendiente` }}</h3>
                     </div>
                     <div class="p-7">
 
