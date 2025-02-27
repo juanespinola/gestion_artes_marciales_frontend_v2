@@ -124,7 +124,7 @@ export default {
                                     </div>
                                     <div class="mb-4">
                                         <label
-                                            class="mb-2.5 block font-medium text-black dark:text-white">Password</label>
+                                            class="mb-2.5 block font-medium text-black dark:text-white">Contraseña</label>
                                         <div class="relative">
                                             <input type="password" name="password" id="password" v-model="obj.password"
                                                 class="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-black dark:text-white">
@@ -147,7 +147,7 @@ export default {
                                         <input type="submit"
                                             class="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 font-medium text-white transition hover:bg-opacity-90"
                                             :class="{ 'opacity-25 cursor-not-allowed': !obj.email && !obj.password }"
-                                            value="Sign In" :disabled="!obj.email && !obj.password">
+                                            value="Ingresar" :disabled="!obj.email && !obj.password">
                                     </div>
                                     <!-- <div class="mt-6 text-center">
                                         <p class="font-medium">Eres Atleta?

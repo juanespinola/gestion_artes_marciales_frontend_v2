@@ -119,7 +119,7 @@ export default {
                                         <div class="flex pt-6 justify-between">
                                             <Button label="Atras" severity="secondary" icon="pi pi-arrow-left"
                                                 @click="activateCallback('2')" />
-                                            <Button label="Finalizar" iconPos="right" icon="pi pi-arrow-right"
+                                            <Button label="Registrarse" iconPos="right" icon="pi pi-arrow-right"
                                                 @click="saveData()" />
                                         </div>
                                     </StepPanel>

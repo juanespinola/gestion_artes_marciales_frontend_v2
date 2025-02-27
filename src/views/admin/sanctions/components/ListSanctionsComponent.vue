@@ -21,6 +21,7 @@ export default {
         const router = useRouter();
         const columns = [
             { field: 'description', header: 'Descripción' },
+            { field: 'status', header: 'Estado' },
             // { field: 'comments', header: 'Motivos' },
         ];
         const data = ref([]);

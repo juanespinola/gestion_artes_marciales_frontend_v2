@@ -27,7 +27,7 @@ export default {
        
 
         const fetchData = async () => {
-            console.log(props.data)    
+             
             const response = await create(`${collection}`, { event_id: props.data.id })
             if (response.success) {
                 data.value = response.data

@@ -88,26 +88,26 @@ export default {
 
       
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
-        onMounted(() => {
-            if (isEditing.value) fetchProduct();
+        onMounted(async () => {
+            if (isEditing.value) await fetchProduct();
         });
 
-        watch(() => props.id, (newId) => {
-            if (newId) fetchProduct();
+        watch(() => props.id, async (newId) => {
+            if (newId) await fetchProduct();
         });
 
         
 
         const handleStatusSelected = (itemSelected) => {
             obj.value.status = (itemSelected.id)
-            console.log(userStore.user.id)
+            
             if(obj.value.status == 'aprobado'){
-                obj.approved_by = userStore.user.id
-                obj.rejected_by = null
+                obj.value.approved_by = userStore.user.id
+                obj.value.rejected_by = null
                 
             } else if(obj.value.status == 'rechazado'){
-                obj.rejected_by = userStore.user.id
-                obj.approved_by = null
+                obj.value.approved_by = null
+                obj.value.rejected_by = userStore.user.id
             }
         }
 

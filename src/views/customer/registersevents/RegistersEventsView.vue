@@ -84,6 +84,7 @@ export default {
                 }
                 return;
             }
+           
             
             router.push({ name: 'TabsPaymentsFee', query: { pageFrom: 'registerevent'} });
             // if(response.success && response.data.response){

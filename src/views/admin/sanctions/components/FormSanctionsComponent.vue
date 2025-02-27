@@ -28,7 +28,8 @@ export default {
         const obj = ref({
             description: '',
             comments: '',
-            athlete_id: props.athleteid
+            athlete_id: props.athleteid,
+            status: '',
         });
         const error = ref(null);
         const router = useRouter();
@@ -85,16 +86,20 @@ export default {
         };
 
         // Llamar a fetchProduct cuando el componente se monta o cuando cambia el id
-        onMounted(() => {
-            if (isEditing.value) fetchProduct();
+        onMounted(async () => {
+            if (isEditing.value) await fetchProduct();
         });
 
-        watch(() => props.id, (newId) => {
-            if (newId) fetchProduct();
+        watch(() => props.id, async (newId) => {
+            if (newId) await fetchProduct();
         });
+
+        const handleDescriptionSelected = (itemSelected) => {
+            obj.value.description = (itemSelected.id)
+        }
 
         const handleStatusSelected = (itemSelected) => {
-            obj.value.description = (itemSelected.id)
+            obj.value.status = JSON.parse(itemSelected.id)
         }
 
         return { 
@@ -103,7 +108,8 @@ export default {
             saveData, 
             error, 
             validateForm, 
-            handleStatusSelected 
+            handleDescriptionSelected,
+            handleStatusSelected,
         };
     }
 }
@@ -123,7 +129,14 @@ export default {
                                 { id: 'falta_cometida', name: 'Falta Cometida' }, 
                                 { id: 'falta_economica', name: 'Falta Económica' }
                             ]"
-                            :title="'Tipo de Sanción'" :selectedOption="obj.description" @obj-selected="handleStatusSelected" />
+                            :title="'Tipo de Sanción'" :selectedOption="obj.description" @obj-selected="handleDescriptionSelected" />
+                    </div>
+                </div>
+
+                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                    <div class="w-full">
+                        <SelectComponent :data="[{ id: 'true', name: 'Activo' }, { id: 'false', name: 'Inactivo' }]"
+                            :title="'Estado'" :selectedOption="obj.status" @obj-selected="handleStatusSelected" />
                     </div>
                 </div>
 
