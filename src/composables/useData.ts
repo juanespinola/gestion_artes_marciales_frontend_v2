@@ -2,7 +2,6 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { useUserStore } from '@/stores/user';
 import { getActivePinia } from 'pinia';
-import useNotification from './useNotification';
 
 export default function useData() {
     // const baseUrl = `https://mart.juanespinola.dev/api/`; //prod
@@ -10,7 +9,7 @@ export default function useData() {
     const userStore = getActivePinia() ? useUserStore() : null;
     const isLoading = ref(false);
     const error = ref<string | null>(null);
-    // const toast = notification()
+    
     // Configurar instancia de Axios
     const instance = axios.create({ baseURL: baseUrl });
 

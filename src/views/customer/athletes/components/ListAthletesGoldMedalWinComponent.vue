@@ -1,4 +1,5 @@
 <script>
+import { useRouter } from 'vue-router';
 export default {
     props: {
         data: {
@@ -7,10 +8,15 @@ export default {
         }
     },
     setup(props){
+        const router = useRouter();
 
+        const getAthleteDetail = (id) => {
+            router.push({ name: 'DetailAthlete', params: { id } });
+        }
 
         return {
-            props
+            props,
+            getAthleteDetail
         }
     }
 }
@@ -28,7 +34,7 @@ export default {
 
                             <div
                                 class="flex items-center justify-between p-4.5 hover:bg-[#F9FAFB] dark:hover:bg-meta-4"
-                                v-for="athlete of props.data">
+                                v-for="athlete of props.data" @click="getAthleteDetail(athlete.id)">
                                 <div class="flex items-center">
                                     <div class="mr-4 h-[50px] overflow-hidden rounded-full w-full max-w-13 h-13">
                                         <img :src="athlete.profile_images ? athlete.profile_images:'https://i.pinimg.com/550x/a8/0e/36/a80e3690318c08114011145fdcfa3ddb.jpg'" alt="user" class="rounded-full object-cover object-center">
