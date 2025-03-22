@@ -23,12 +23,44 @@ export default {
         const getAge = (birthdate) => {
             return moment().diff(birthdate, 'years')
         }
+
+        const getColor = (color) => {
+            let bg_color = '';
+            switch (color?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"")) {
+                case "blanco":
+                    bg_color = 'bg-white'
+                break;
+                case "azul":
+                    bg_color = 'bg-blue-700'
+                break;
+                case "lila":
+                    bg_color = 'bg-purple-700'
+                break;
+                case "marron":
+                    bg_color = 'bg-[#7C4700]'
+                break;
+                default:
+                    bg_color = 'bg-black'
+                break;
+            
+               
+            }
+            return bg_color;
+        }
+
+        const capitalizeWord = (texto) => {
+            if (typeof texto !== "string" || texto.length === 0) return "";
+            return texto[0]?.toUpperCase() + texto.slice(1)
+        }
+
         return {
             data,
             isLoading,
             error,
             fetchData,
             getAge,
+            getColor,
+            capitalizeWord,
             props
         }
     }
@@ -56,7 +88,7 @@ export default {
                             <div class="w-3/6">
                                 <h4
                                     class="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                                    {{ data?.name }}
+                                    {{ capitalizeWord(data?.name) || data?.name }}
                                 </h4>
                                 <div
                                     class="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
@@ -72,7 +104,7 @@ export default {
                                 <div class="rounded-2xl bg-gray dark:border-strokedark dark:bg-meta-4">
                                     <div
                                         class="relative flex items-center justify-center w-56 h-6 bg-gray-900 rounded-lg">
-                                        <div class="absolute w-full h-full bg-yellow-400 rounded-md"></div>
+                                        <div class="absolute w-full h-full rounded-md " :class="getColor(data?.belt)"></div>
                                     </div>
                                 </div>
                             </div>
@@ -125,10 +157,6 @@ export default {
                                             </div>
                                             <div v-if="matchbracket?.bracket.phase == 'Final' && matchbracket?.athlete_id_winner == props.id"
                                                 class="flex border-y border-gray-300 py-2 dark:border-gray-600 mt-5">
-                                                <!-- {{  matchbracket?.bracket.phase }} {{ matchbracket?.bracket.phase == 'Final' &&
-                                                    matchbracket?.athlete_id_winner == props.id ?  : 
-                                                    matchbracket?.bracket.phase == 'Final' &&
-                                                    matchbracket?.athlete_id_loser == props.id ? "Plata" : null}} -->
                                                 <span
                                                     class="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium capitalize text-sm text-white dark:text-white mr-2 bg-yellow-500">oro</span>
                                             </div>

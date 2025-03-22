@@ -5,6 +5,8 @@ import RouteAthleteEvents from '@/views/customer/events/routes'
 import RouteRegisterEvents from '@/views/customer/registersevents/routes'
 import RouteAthletes from '@/views/customer/athletes/routes'
 import RouteRanking from '@/views/customer/ranking/routes'
+import FederationDetail from './FederationDetail.vue'
+
 
 
 export default [
@@ -15,4 +17,5 @@ export default [
     ...RouteRegisterEvents,
     ...RouteAthletes,
     ...RouteRanking,
+    { path: 'federation/detail', name: "FederationDetail", component: FederationDetail, props:true },
 ]

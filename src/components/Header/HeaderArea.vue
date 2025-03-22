@@ -98,7 +98,7 @@ const isPageFederations = route.path == '/'
         <DropdownUser v-if="userStore.isOnline && userStore.user.type == 'athlete' && !isPageFederations"/>
         <DropdownAdmin v-if="userStore.isOnline && userStore.user.type !== 'athlete' && !isPageFederations"/>
         
-        <button @click="$router.push({ name: 'Login'})" v-if="!userStore.isOnline && !isPageFederations">Login</button>
+        <button @click="$router.push({ name: 'Login'})" v-if="!userStore.isOnline && !isPageFederations">Iniciar Sesión</button>
         <button @click="$router.push({ name: 'Register'})" v-if="!userStore.isOnline && !isPageFederations">Registrarse</button>
         <!-- User Area -->
       </div>

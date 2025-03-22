@@ -154,7 +154,7 @@ const logout = () => {
             fill=""
           />
         </svg>
-        Log Out
+        Cerrar Sesión
       </button>
     </div>
     <!-- Dropdown End -->

@@ -54,12 +54,12 @@ export default {
 
         const fetchInscription = async () => {
             const response = await find('athlete/getinscription', props.inscription_id);
-            console.log(response.data)
+            // console.log(response.data)
             if (response.success) {
-                obj.value.description = response.data.description
+                obj.value.description = response.data.event.description
                 obj.value.amount_fee = response.data.amount_fee
                 obj.value.total = response.data.amount_fee
-                obj.value.membership_id = props.membership_id
+                obj.value.inscription_id = props.inscription_id
                 obj.value.total_payment = response.data.tariff_inscription ? response.data.tariff_inscription.price : response.data.inscription_fee
                 obj.value.payment_for = 'inscription'
             }
@@ -134,7 +134,7 @@ export default {
         </div>
         <div class="p-7">
             <form @submit.prevent="payment">
-                {{ obj }}
+                <!-- {{ obj }} -->
                 <div class="mb-5.5">
                     <label for="roleSelect" class="mb-4.5 block text-sm font-medium text-black dark:text-white">
                         Seleccione Método de Pago </label>
