@@ -28,6 +28,7 @@ export default {
             name: '',
             email: '',
             rol: [],
+            password: ''
         });
         const error = ref(null);
         const router = useRouter();
@@ -42,6 +43,7 @@ export default {
                     obj.value.name = response.data.name;
                     obj.value.email = response.data.email;
                     obj.value.rol = response.data.roles;
+                    obj.value.password = response.data.password;
                 }
             }
         };
@@ -139,7 +141,7 @@ export default {
                             for="name">Nombre</label>
                         <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="name" id="name" placeholder="Destornillador Blanco" v-model="obj.name">
+                            type="text" name="name" id="name" v-model="obj.name">
                     </div>
                 </div>
                 <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -148,7 +150,16 @@ export default {
                             for="email">E-mail</label>
                         <input
                             class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
-                            type="text" name="email" id="email" placeholder="Destornillador Blanco" v-model="obj.email">
+                            type="text" name="email" id="email" v-model="obj.email">
+                    </div>
+                </div>
+                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                    <div class="w-full">
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white"
+                            for="password">Password</label>
+                        <input
+                            class="w-full rounded border border-stroke bg-gray py-3 px-4.5 font-normal text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                            type="password" name="password" id="password" v-model="obj.password">
                     </div>
                 </div>
 
