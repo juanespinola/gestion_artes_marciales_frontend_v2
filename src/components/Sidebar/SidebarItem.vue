@@ -22,7 +22,6 @@ const handleItemClick = () => {
     return props.item.children.some((child: SidebarItem) => sidebarStore.selected === child.label)
   }
 }
-
 </script>
 
 <template>

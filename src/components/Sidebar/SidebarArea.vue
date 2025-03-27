@@ -15,19 +15,32 @@ onClickOutside(target, () => {
 })
 
 const userPermission = userStore.user.permissions
-// console.log(userPermission)
+console.log(userPermission)
 
 
 const filteredMenuGroups = computed(() => {
-  
   return (menuItems) => {
-      return menuItems.filter(item => 
-        !item.permission.length || 
-        item.permission.some(permission => userPermission.includes(permission))
-      );
-    };
+    return menuItems
+      .map(item => {
+        // Filtrar children según permisos
+        const filteredChildren = item.children?.filter(child => 
+          child.permission.length && child.permission.some(permission => userPermission.includes(permission))
+        ) || [];
 
+        // Verificar si el item principal tiene permisos o si tiene children con permisos
+        const hasPermission = item.permission.length && item.permission.some(permission => userPermission.includes(permission));
+
+        // Si el item no tiene permisos y no tiene children válidos, se descarta
+        if (!hasPermission && filteredChildren.length === 0) {
+          return null;
+        }
+
+        return { ...item, children: filteredChildren.length > 0 ? filteredChildren : undefined };
+      })
+      .filter(item => item !== null); // Eliminar los null de la lista
+  };
 });
+
 
 const menuGroups = ref([
   {
@@ -65,6 +78,8 @@ const menuGroups = ref([
           { label: 'Usuarios', route: '/admin/users', permission: ['user.access'] },
           { label: 'Permisos', route: '/admin/permissions', permission: ['permission.access'] },
           { label: 'Roles', route: '/admin/roles', permission: ['rol.access'] },
+          { label: 'Usuarios Federación', route: '/admin/federationusers', permission: ['user_federation.access'] },
+          { label: 'Usuarios Asociación', route: '/admin/associationusers', permission: ['user_association.access'] },
         ],
         permission: ['user.access']
       },
@@ -299,7 +314,7 @@ const menuGroups = ref([
                 </svg>`,
         label: 'Confirmar Pagos',
         route: '/admin/payments',
-        permission: []
+        permission: ['payment.access']
       },
     ]
   }
