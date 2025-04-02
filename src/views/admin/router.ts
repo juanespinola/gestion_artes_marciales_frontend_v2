@@ -18,6 +18,9 @@ import RouteMinorAuthorizations from '@/views/admin/minorauthorization/routes'
 import RouteMembershipTypes from '@/views/admin/membershiptypes/routes'
 import RouteBelts from '@/views/admin/belts/routes'
 import RoutePayments from '@/views/admin/payments/routes'
+import RouteAssociationsUsers from '@/views/admin/associationsusers/routes'
+import RouteFederationsUsers from '@/views/admin/federationsusers/routes'
+import RouteReports from '@/views/admin/reports/routes'
 
 export default [
     ...RouteUsers,
@@ -40,4 +43,7 @@ export default [
     ...RouteMembershipTypes,
     ...RouteBelts,
     ...RoutePayments,
+    ...RouteAssociationsUsers,
+    ...RouteFederationsUsers,
+    ...RouteReports
 ]
