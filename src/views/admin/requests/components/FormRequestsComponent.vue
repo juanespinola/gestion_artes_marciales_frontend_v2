@@ -36,7 +36,8 @@ export default {
             athlete_id: '',
             status: '',
             approved_by:'',
-            rejected_by:''
+            rejected_by:'',
+            event_id: ''
         });
 
         const userStore = useUserStore()

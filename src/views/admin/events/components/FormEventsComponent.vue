@@ -210,7 +210,7 @@ export default {
                         <SelectComponent :data="eventstypes" :title="'Tipo de Evento'"
                             :selectedOption="obj.type_event_id" @obj-selected="handleEventTypeSelected" />
                     </div>
-                    <div class="w-full">
+                    <div class="w-full" v-if="isEditing">
                         <SelectComponent :data="statusevent" :title="'Estado de Evento'"
                             :selectedOption="obj.status_event_id" @obj-selected="handleEventStatusSelected" />
                     </div>
