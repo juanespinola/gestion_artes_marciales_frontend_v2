@@ -131,7 +131,7 @@ const isPreviousEven = (index) => {
       </h2>
 
       <div class="flex h-full justify-center">
-        <ol class="space-y-6 w-full matchbracket flex flex-col " 
+        <ol class="space-y-6 w-full matchbracket flex flex-col justify-around " 
           :class="{
             'justify-center': isPreviousEven(index),
             'justify-around': !isPreviousEven(index)
@@ -155,7 +155,7 @@ const isPreviousEven = (index) => {
 
 
               <div @click="openMatchModal(node?.match)"
-                class="group cursor-pointer p-2 bg-gray-800 text-white rounded shadow  relative">
+                class="group cursor-pointer p-2  text-black dark:bg-gray-800 dark:text-white rounded shadow  relative">
 
                 <!-- Tooltip -->
                 <div class="absolute left-full top-1/2 -translate-y-1/2 ml-2 p-3 max-w-xs min-w-[150px] w-auto

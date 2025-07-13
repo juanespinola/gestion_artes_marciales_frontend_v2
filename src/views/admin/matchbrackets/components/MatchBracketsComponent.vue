@@ -4,13 +4,15 @@ import { ref, computed, onMounted, watch } from 'vue';
 import useData from '@/composables/useData';
 import { useRouter, useRoute } from 'vue-router'
 import UpdateMatchModalFormComponent from "./UpdateMatchModalFormComponent.vue";
-import MatchBracketComponent from "./MatchBracketComponent.vue";
+import MatchBracketImparComponent from "./MatchBracketImparComponent.vue";
+import MatchBracketParComponent from "./MatchBracketParComponent.vue";
 
 export default {
     components: {
         CardComponent,
         UpdateMatchModalFormComponent,
-        MatchBracketComponent
+        MatchBracketImparComponent,
+        MatchBracketParComponent
     },
     props: {
         eventid: {
@@ -38,9 +40,10 @@ export default {
 
         const fetchData = async () => {
             const response = await create(collection, obj.value);
-            
+            console.log(response)
             if (response.success) {
                 data.value = response?.data;
+
             }
 
         };
@@ -96,14 +99,14 @@ export default {
                 class="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white bg-meta-3"
                 @click="router.go(-1)">Inscriptos</button>
         </div>
-        <!-- <div class="flex"> -->
-            <!-- <div class="flex flex-row"> -->
-                <!-- <ol class="flex flex-1 flex-col justify-around mr-5 h-auto"> -->
-                    <MatchBracketComponent :node="data" @openMatchModal="openMatchModal"/>
-                <!-- </ol> -->
-            <!-- </div> -->
-        <!-- </div> -->
-
+       
+        <div v-if="data.count_match % 2 == 0">
+            <MatchBracketParComponent :node="data.matches" @openMatchModal="openMatchModal"/>
+        </div>
+        <div v-if="data.count_match % 2 != 0">
+            <MatchBracketImparComponent :node="data.matches" @openMatchModal="openMatchModal"/>
+        </div>
+       
         <UpdateMatchModalFormComponent :isOpen="isModalMatchOpen" :title="'Actualizar Combate'" :data="modalMatchData"
             @close="closeMatchModal" />
 
