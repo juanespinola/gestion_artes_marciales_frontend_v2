@@ -34,7 +34,7 @@ export default {
 </script>
 
 <template>
-    <div class="grid grid-cols-1 gap-9 md:grid-cols-2">
+    <div class="grid grid-cols-1 gap-9">
         <div v-if="data.length > 0"
             class="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div class="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
@@ -57,7 +57,7 @@ export default {
                                         <h5 class="font-sm text-black dark:text-white">{{ item_athlete?.athlete?.name }}
                                         </h5>
                                         <!-- <span class="text-sm">{{ item_athlete?.athlete }}</span> -->
-                                        <span class="text-sm">Falta cambiar la consulta sql para traer el pais</span>
+                                        <span class="text-sm">{{ item_athlete?.athlete?.country }}</span>
                                     </div>
                                 </div>
 

@@ -21,6 +21,7 @@ import RoutePayments from '@/views/admin/payments/routes'
 import RouteAssociationsUsers from '@/views/admin/associationsusers/routes'
 import RouteFederationsUsers from '@/views/admin/federationsusers/routes'
 import RouteReports from '@/views/admin/reports/routes'
+import RouteAuditoria from '@/views/admin/auditoria/routes'
 
 export default [
     ...RouteUsers,
@@ -45,5 +46,6 @@ export default [
     ...RoutePayments,
     ...RouteAssociationsUsers,
     ...RouteFederationsUsers,
-    ...RouteReports
+    ...RouteReports,
+    ...RouteAuditoria
 ]

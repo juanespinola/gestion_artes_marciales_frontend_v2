@@ -28,6 +28,14 @@ export default {
             fetchData(); // Cargar los datos al montar el componente
         });
 
+        const getRandomImage = () => {
+        // Genera una URL con ancho/alto y un parámetro aleatorio para evitar caché
+            const width = 400
+            const height = 300
+            const random = Math.floor(Math.random() * 1000)
+            return `https://picsum.photos/${width}/${height}?random=${random}`
+        }
+
 
         return {
             data,
@@ -35,6 +43,7 @@ export default {
             error,
             router,
             fetchData,    
+            getRandomImage
         };
     }
 }
@@ -44,7 +53,7 @@ export default {
     <div
         class="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
         <div class="relative z-20 h-35 md:h-65 border-b border-stroke dark:border-strokedark dark:bg-boxdark">
-            <img :src="data?.media_new_detail?.route_file" alt="profile cover"
+            <img :src="data?.media_new_detail?.route_file ? data?.media_new_detail?.route_file : getRandomImage()"
                 class="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center">
 
         </div>
@@ -55,7 +64,7 @@ export default {
                     <p class="font-medium">{{ data?.created_at }}</p>
                     <h4 class="font-medium text-black dark:text-white">Categoria: {{ data?.category_new?.description }}</h4>
                 </div>
-                <div class="mt-10">
+                    <div class="mt-10">
                     <p class="mt-4.5 text-sm font-normal"> {{ data?.content }}</p>
                 </div>
                 
