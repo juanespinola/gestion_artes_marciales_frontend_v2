@@ -239,10 +239,11 @@ export default {
                     </Column>
                     <Column field="athlete.name" header="Atleta"></Column>
                     <Column field="athlete.birthdate" header="Edad"></Column>
-                    <Column field="athlete" header="Equipo / Academia">
-                        <template #body="slotProps">
-                            {{ slotProps.academy_id ? slotProps.academy_id : "Sin Academia" }}
-                        </template>
+                    <Column field="athlete.academy.description" header="Equipo / Academia">
+                        <!-- <template #body="slotProps"> -->
+                            <!-- {{ slotProps ? slotProps : "Sin Academia" }} -->
+                            <!-- {{ slotProps?.description ? slotProps?.description : "Sin Academia" }} -->
+                        <!-- </template> -->
                     </Column>
                     <Column header="Peso en Torneo">
                         <template #body="slotProps">

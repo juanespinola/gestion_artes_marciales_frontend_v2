@@ -33,7 +33,8 @@ export default {
             const width = 400
             const height = 300
             const random = Math.floor(Math.random() * 1000)
-            return `https://picsum.photos/${width}/${height}?random=${random}`
+            // return `https://picsum.photos/${width}/${height}?random=${random}`
+            return 'https://sapaf.gob.mx/images/titulos/NOTICIAS.png';
         }
 
 

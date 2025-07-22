@@ -52,7 +52,7 @@ export default {
             @click="newDetailData(notice.id)">
             <div
                 class="router-link-active router-link-exact-active block px-4 pt-4">
-                <img :src="notice?.media_new_list?.route_file" alt="News">
+                <img :src="notice?.media_new_list?.route_file ? notice?.media_new_list?.route_file : 'https://sapaf.gob.mx/images/titulos/NOTICIAS.png'" >
             </div>
             <div class="p-6">
                 <h4 class="mb-3 text-xl font-semibold text-black dark:text-white">

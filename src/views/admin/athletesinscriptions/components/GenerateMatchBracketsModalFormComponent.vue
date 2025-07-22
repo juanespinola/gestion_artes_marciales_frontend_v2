@@ -161,7 +161,7 @@ export default {
                     <div class="w-full">
                         <SelectComponent 
                             :data="[
-                                { id: 'single_elimination', name: 'Single Elimination' }
+                                { id: 'single_elimination', name: 'Eliminacion Directa' }
                             ]" 
                             :title="'Tipo de Llave'" 
                             :selectedOption="obj.type_bracket"
