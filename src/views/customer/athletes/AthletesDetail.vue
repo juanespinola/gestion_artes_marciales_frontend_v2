@@ -176,7 +176,7 @@ export default {
 
                                 <div
                                     class="relative z-20 h-35 md:h-65 border-b border-stroke dark:border-strokedark dark:bg-boxdark">
-                                    <img :src="data?.media_event?.route_file ? data?.media_event?.route_file : 'https://cloudfront-us-east-1.images.arcpublishing.com/metroworldnews/DR4BZQ466JFDFPWA5R3J5LTIY4.jpg'"
+                                    <img :src="data?.media_event?.route_file ? data?.media_event?.route_file : 'https://ajptour.com/pictures/t/1494055-mpqe/ajp-tour-paraguay-national-jiu-jitsu-championship-2024-gi-no-gi.jpg'"
                                         alt="profile cover"
                                         class="h-full w-full rounded-tl-sm rounded-tr-sm object-cover object-center">
                                 </div>

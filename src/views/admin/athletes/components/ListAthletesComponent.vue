@@ -22,7 +22,7 @@ export default {
         const columns = [
             { field: 'name', header: 'Descripción' },
             { field: 'document', header: 'Nro Documento' },
-            { field: 'academy_id', header: 'Academia' },
+            { field: 'academy.description', header: 'Academia' },
             { field: 'belt.color', header: 'Cinturón' },
             { field: 'country.description', header: 'Pais' },
             { field: 'city.description', header: 'Ciudad' },

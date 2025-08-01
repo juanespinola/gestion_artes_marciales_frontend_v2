@@ -87,21 +87,27 @@ export default {
         </div>
         <div class="p-7">
             <form @submit.prevent="saveData">
-                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                <div class="mb-3.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full">
                         <label class="mb-3 block text-sm font-medium text-black dark:text-white">Tipo de Pago: {{ obj.payment_gateway	 }}</label>
                     </div>
                 </div>
-                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                <div class="mb-3.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Nro de Comprobante: {{ obj.json_request ? JSON.parse(obj.json_request).numero_comprobante : "" }}</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Nro de Comprobante: {{ obj.json_request ? JSON.parse(obj.json_request).numero_comprobante : "Sin Numero de Comprobante" }}</label>
                     </div>
                 </div>
-                <div class="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                <div class="mb-3.5 flex flex-col gap-5.5 sm:flex-row">
                     <div class="w-full">
-                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Atleta: {{ obj.json_request ? JSON.parse(obj.json_request)?.motivo : "" }}</label>
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Atleta: {{ obj.athlete?.name  }}</label>
                     </div>
                 </div>
+                <div class="mb-3.5 flex flex-col gap-5.5 sm:flex-row">
+                    <div class="w-full">
+                        <label class="mb-3 block text-sm font-medium text-black dark:text-white">Estado: {{ obj?.status  }}</label>
+                    </div>
+                </div>
+
 
                 <div class="flex justify-end gap-4.5">
                     <button
